@@ -21,12 +21,12 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 1.2 Docker Compose Setup
 
-- [ ] Buat `docker-compose.yml` dengan services:
-  - PostgreSQL (port 5432)
-  - Redis Stack (port 6379 + RedisInsight 8001)
-  - Adminer/pgAdmin (optional, port 8080)
-- [ ] Buat `Dockerfile` untuk backend
-- [ ] Setup volume untuk persistent data
+- [x] Buat `docker-compose.yml` dengan services:
+  - PostgreSQL
+  - Redis Stack
+  - Adminer
+- [x] Buat `Dockerfile` untuk backend
+- [x] Setup volume untuk persistent data
 
 ### 1.3 Database & ORM Configuration
 
@@ -50,6 +50,14 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [ ] Konfigurasi API metadata (title, description, version)
 - [ ] Endpoint `/api/docs` untuk Swagger UI
 - [ ] Gunakan decorators (`@ApiTags`, `@ApiOperation`, `@ApiResponse`) di setiap endpoint
+
+### 1.6 Prometheus & Grafana Monitoring
+
+- [ ] Install `@willsoto/nestjs-prometheus` dan `prom-client`
+- [ ] Setup PrometheusModule di `app.module.ts`
+- [ ] Endpoint `/metrics` untuk Prometheus scraping
+- [ ] Tambahkan Prometheus & Grafana ke `docker-compose.yml`
+- [ ] Buat Grafana dashboard untuk API metrics (request rate, latency, errors)
 
 **Deliverables**:
 
