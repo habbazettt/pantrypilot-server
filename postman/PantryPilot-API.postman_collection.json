@@ -1,0 +1,192 @@
+{
+    "info": {
+        "_postman_id": "pantrypilot-api-collection",
+        "name": "PantryPilot API",
+        "description": "Backend API untuk PantryPilot - aplikasi generator resep berbasis bahan makanan",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000/api",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Health",
+            "description": "Health check endpoints",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check the health status of the application, database, and Redis"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Root",
+            "description": "Root endpoints",
+            "item": [
+                {
+                    "name": "Hello World",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ]
+                        },
+                        "description": "Returns a hello message"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Recipes",
+            "description": "Recipe generation and management",
+            "item": [
+                {
+                    "name": "Generate Recipes",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"ingredients\": [\"ayam\", \"bawang putih\", \"kecap manis\", \"jahe\"],\n  \"maxTime\": 30,\n  \"difficulty\": \"easy\",\n  \"allergies\": [],\n  \"preferences\": [\"halal\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/generate",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                "generate"
+                            ]
+                        },
+                        "description": "Generate 1-3 recipe suggestions based on provided ingredients"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Generate Recipes - Minimal",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"ingredients\": [\"telur\", \"nasi\", \"kecap\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/generate",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                "generate"
+                            ]
+                        },
+                        "description": "Generate recipes with minimal input"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Recipes",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes"
+                            ]
+                        },
+                        "description": "Retrieve all saved recipes"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Recipe by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/:id",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "uuid-here",
+                                    "description": "Recipe ID (UUID)"
+                                }
+                            ]
+                        },
+                        "description": "Retrieve a specific recipe by its ID"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Metrics",
+            "description": "Prometheus metrics endpoint",
+            "item": [
+                {
+                    "name": "Get Metrics",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/metrics",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "metrics"
+                            ]
+                        },
+                        "description": "Get Prometheus metrics for monitoring"
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

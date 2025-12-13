@@ -45,19 +45,26 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 1.5 Swagger API Documentation
 
-- [ ] Install `@nestjs/swagger` dan `swagger-ui-express`
-- [ ] Setup Swagger module di `main.ts`
-- [ ] Konfigurasi API metadata (title, description, version)
-- [ ] Endpoint `/api/docs` untuk Swagger UI
-- [ ] Gunakan decorators (`@ApiTags`, `@ApiOperation`, `@ApiResponse`) di setiap endpoint
+- [x] Install `@nestjs/swagger` dan `swagger-ui-express`
+- [x] Setup Swagger module di `main.ts`
+- [x] Konfigurasi API metadata (title, description, version)
+- [x] Endpoint `/api/docs` untuk Swagger UI
+- [x] Gunakan decorators (`@ApiTags`, `@ApiOperation`, `@ApiResponse`) di setiap endpoint
 
 ### 1.6 Prometheus & Grafana Monitoring
 
-- [ ] Install `@willsoto/nestjs-prometheus` dan `prom-client`
-- [ ] Setup PrometheusModule di `app.module.ts`
-- [ ] Endpoint `/metrics` untuk Prometheus scraping
-- [ ] Tambahkan Prometheus & Grafana ke `docker-compose.yml`
-- [ ] Buat Grafana dashboard untuk API metrics (request rate, latency, errors)
+- [x] Install `@willsoto/nestjs-prometheus` dan `prom-client`
+- [x] Setup PrometheusModule di `app.module.ts`
+- [x] Endpoint `/metrics` untuk Prometheus scraping
+- [x] Tambahkan Prometheus & Grafana ke `docker-compose.yml`
+- [x] Buat Grafana dashboard untuk API metrics (request rate, latency, errors)
+
+### 1.7 Setup End-to-End Testing
+
+- [ ] Install `@nestjs/testing`, `jest`, dan `ts-jest`
+- [ ] Setup jest.config.js
+- [ ] Buat test cases untuk setiap service
+- [ ] Setup coverage reporting
 
 ---
 
@@ -65,8 +72,10 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 2.1 Recipe Module Setup
 
-- [ ] Buat Recipe module (`nest g module recipe`)
-- [ ] Buat entities:
+- [x] Buat Recipe module (`nest g module recipe`)
+- [x] Buat entities
+- [x] Buat repositories
+- [x] Buat services
 
 ### 2.2 LLM Integration
 

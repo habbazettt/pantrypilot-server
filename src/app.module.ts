@@ -2,11 +2,19 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import {
+  PrometheusModule,
+  makeCounterProvider,
+  makeHistogramProvider,
+} from '@willsoto/nestjs-prometheus';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { appConfig, databaseConfig, redisConfig } from './config';
 import { validationSchema } from './config/validation.schema';
 import { HealthModule } from './modules/health';
+import { RecipeModule } from './modules/recipe';
+import { MetricsInterceptor } from './common/interceptors';
 
 @Module({
   imports: [
@@ -17,6 +25,14 @@ import { HealthModule } from './modules/health';
       validationSchema,
       validationOptions: {
         abortEarly: false,
+      },
+    }),
+
+    // Prometheus metrics - path without /api prefix since it's added globally
+    PrometheusModule.register({
+      path: '/metrics',
+      defaultMetrics: {
+        enabled: true,
       },
     }),
 
@@ -47,10 +63,30 @@ import { HealthModule } from './modules/health';
       }),
     }),
 
-    // Health checks
+    // Feature modules
     HealthModule,
+    RecipeModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Custom Prometheus metrics
+    makeCounterProvider({
+      name: 'http_requests_total',
+      help: 'Total number of HTTP requests',
+      labelNames: ['method', 'route', 'status'],
+    }),
+    makeHistogramProvider({
+      name: 'http_request_duration_seconds',
+      help: 'Duration of HTTP requests in seconds',
+      labelNames: ['method', 'route', 'status'],
+      buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
+    }),
+    // Global metrics interceptor (with DI)
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: MetricsInterceptor,
+    },
+  ],
 })
 export class AppModule { }
