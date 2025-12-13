@@ -30,18 +30,18 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 1.3 Database & ORM Configuration
 
-- [ ] Install dan konfigurasi TypeORM/Prisma
-- [ ] Setup database connection dengan PostgreSQL
-- [ ] Buat initial migration setup
-- [ ] Konfigurasi Redis client (`ioredis` atau `@nestjs-modules/ioredis`)
+- [x] Install dan konfigurasi TypeORM/Prisma
+- [x] Setup database connection dengan PostgreSQL
+- [x] Buat initial migration setup
+- [x] Konfigurasi Redis client (`ioredis` atau `@nestjs-modules/ioredis`)
 
 ### 1.4 Base Configuration
 
-- [ ] Setup ConfigModule dengan validation (Joi/class-validator)
-- [ ] Konfigurasi CORS
-- [ ] Setup global exception filter
-- [ ] Setup request logging interceptor
-- [ ] Health check endpoint (`GET /health`)
+- [x] Setup ConfigModule dengan validation (Joi/class-validator)
+- [x] Konfigurasi CORS
+- [x] Setup global exception filter
+- [x] Setup request logging interceptor
+- [x] Health check endpoint (`GET /health`)
 
 ### 1.5 Swagger API Documentation
 
@@ -58,12 +58,6 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [ ] Endpoint `/metrics` untuk Prometheus scraping
 - [ ] Tambahkan Prometheus & Grafana ke `docker-compose.yml`
 - [ ] Buat Grafana dashboard untuk API metrics (request rate, latency, errors)
-
-**Deliverables**:
-
-- ✅ NestJS project running di Docker
-- ✅ PostgreSQL & Redis connected
-- ✅ Health check endpoint berfungsi
 
 ---
 
@@ -98,13 +92,6 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [ ] TTL configuration (misal 24 jam)
 - [ ] Cache invalidation strategy
 
-**Deliverables**:
-
-- ✅ Generate endpoint berfungsi
-- ✅ LLM integration working (atau stub)
-- ✅ Redis caching aktif
-- ✅ Response dalam format JSON terstruktur
-
 ---
 
 ## 🗓️ Phase 3 — Persistence & Saved Recipes
@@ -125,12 +112,6 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [ ] Implement session token generation
 - [ ] Store session di Redis (short-lived)
 - [ ] Link saved recipes ke session ID
-
-**Deliverables**:
-
-- ✅ CRUD untuk saved recipes
-- ✅ Anonymous user dapat save & retrieve
-- ✅ Data persisten di PostgreSQL
 
 ---
 
@@ -161,12 +142,6 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [ ] Suggest recipes dengan substitusi bahan
 - [ ] Consider allergy/dietary filters
 
-**Deliverables**:
-
-- ✅ Embedding generation otomatis
-- ✅ Similar recipes endpoint
-- ✅ Vector search via Redis
-
 ---
 
 ## 🗓️ Phase 5 — Feedback System
@@ -185,11 +160,6 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 - [ ] Aggregate rating per recipe
 - [ ] Use feedback untuk improve recommendations
-
-**Deliverables**:
-
-- ✅ Feedback submission working
-- ✅ Rating aggregation
 
 ---
 
@@ -211,11 +181,6 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 - [ ] Auto-generate cooking safety reminders
 - [ ] Ingredient-specific warnings (raw meat, shellfish, dll)
-
-**Deliverables**:
-
-- ✅ Allergy-safe recipes
-- ✅ Dietary filters working
 
 ---
 
@@ -245,12 +210,6 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [ ] Connection pooling
 - [ ] Response compression
 
-**Deliverables**:
-
-- ✅ Rate limiting aktif
-- ✅ Clean error responses
-- ✅ Logging infrastructure
-
 ---
 
 ## 🗓️ Phase 8 — Documentation & Demo Ready
@@ -272,18 +231,3 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [ ] Comprehensive README.md
 - [ ] Quick start guide
 - [ ] Environment variables documentation
-
-**Deliverables**:
-
-- ✅ Swagger UI accessible
-- ✅ Demo dapat dijalankan dengan 1 command
-- ✅ Dokumentasi lengkap
-
----
-
-## 🎯 Minimum Viable Product (MVP)
-
-1. ✅ Backend running di Docker
-2. ✅ Generate recipe dari ingredients
-3. ✅ Redis caching untuk response cepat
-4. ✅ Save & retrieve resep favorit

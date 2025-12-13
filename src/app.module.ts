@@ -5,13 +5,19 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { appConfig, databaseConfig, redisConfig } from './config';
+import { validationSchema } from './config/validation.schema';
+import { HealthModule } from './modules/health';
 
 @Module({
   imports: [
-    // Configuration
+    // Configuration with validation
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig, redisConfig],
+      validationSchema,
+      validationOptions: {
+        abortEarly: false,
+      },
     }),
 
     // Database - PostgreSQL with TypeORM
@@ -40,6 +46,9 @@ import { appConfig, databaseConfig, redisConfig } from './config';
         url: `redis://${configService.get('redis.host')}:${configService.get('redis.port')}`,
       }),
     }),
+
+    // Health checks
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
