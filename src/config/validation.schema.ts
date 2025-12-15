@@ -22,4 +22,13 @@ export const validationSchema = Joi.object({
     // Rate Limiting
     THROTTLE_TTL: Joi.number().default(60),
     THROTTLE_LIMIT: Joi.number().default(10),
+
+    // LLM
+    LLM_PROVIDER: Joi.string().valid('gemini', 'stub').default('gemini'),
+    GEMINI_API_KEY: Joi.string().when('LLM_PROVIDER', {
+        is: 'gemini',
+        then: Joi.required(),
+        otherwise: Joi.optional(),
+    }),
+    GEMINI_MODEL: Joi.string().default('gemini-1.5-flash'),
 });

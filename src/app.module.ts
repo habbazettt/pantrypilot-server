@@ -10,7 +10,7 @@ import {
 } from '@willsoto/nestjs-prometheus';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { appConfig, databaseConfig, redisConfig } from './config';
+import { appConfig, databaseConfig, redisConfig, llmConfig } from './config';
 import { validationSchema } from './config/validation.schema';
 import { HealthModule } from './modules/health';
 import { RecipeModule } from './modules/recipe';
@@ -21,7 +21,7 @@ import { MetricsInterceptor } from './common/interceptors';
     // Configuration with validation
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, redisConfig],
+      load: [appConfig, databaseConfig, redisConfig, llmConfig],
       validationSchema,
       validationOptions: {
         abortEarly: false,

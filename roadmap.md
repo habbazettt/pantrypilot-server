@@ -79,11 +79,11 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 2.2 LLM Integration
 
-- [ ] Buat LLM provider service (abstract untuk flexibility)
-- [ ] Integrasi HuggingFace Inference API (free tier)
-- [ ] Buat fallback/stub untuk offline mode
-- [ ] Design prompt template untuk recipe generation
-- [ ] Implement response parsing & validation
+- [x] Implementasi GeminiService
+- [x] Implementasi fallback/stub untuk offline mode
+- [x] Design prompt template untuk recipe generation
+- [x] Implementasi response parsing & validation
+- [x] Implementasi retry mechanism
 
 ### 2.3 Generate Endpoint
 

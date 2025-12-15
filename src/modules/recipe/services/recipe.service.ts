@@ -3,12 +3,16 @@ import * as crypto from 'crypto';
 import { RecipeRepository } from '../repositories';
 import { GenerateRecipeDto, GenerateRecipeResponseDto, RecipeResponseDto } from '../dto';
 import { Recipe, RecipeDifficulty } from '../entities';
+import { GeminiService } from './gemini.service';
 
 @Injectable()
 export class RecipeService {
     private readonly logger = new Logger(RecipeService.name);
 
-    constructor(private readonly recipeRepository: RecipeRepository) { }
+    constructor(
+        private readonly recipeRepository: RecipeRepository,
+        private readonly geminiService: GeminiService,
+    ) { }
 
     /**
      * Generate fingerprint from ingredients for caching
@@ -63,8 +67,7 @@ export class RecipeService {
     }
 
     /**
-     * Generate recipes from ingredients (stub implementation)
-     * This will be replaced with actual LLM integration
+     * Generate recipes from ingredients using Gemini AI
      */
     async generateRecipes(dto: GenerateRecipeDto): Promise<GenerateRecipeResponseDto> {
         const fingerprint = this.generateFingerprint(dto);
@@ -82,12 +85,23 @@ export class RecipeService {
             };
         }
 
-        // TODO: Replace with actual LLM call
-        this.logger.log('Cache miss, generating new recipes...');
-        const generatedRecipes = this.generateStubRecipes(dto);
+        // Generate using Gemini AI
+        this.logger.log('Cache miss, generating new recipes with Gemini...');
+        const generatedRecipes = await this.geminiService.generateRecipes(dto);
 
-        // Save to database
-        const savedRecipes = await this.saveGeneratedRecipes(generatedRecipes, fingerprint);
+        // Convert to entity format and save
+        const recipesToSave: Partial<Recipe>[] = generatedRecipes.map((r) => ({
+            title: r.title,
+            description: r.description,
+            ingredients: r.ingredients,
+            steps: r.steps,
+            estimatedTime: r.estimatedTime,
+            difficulty: r.difficulty,
+            safetyNotes: r.safetyNotes,
+            tags: r.tags,
+        }));
+
+        const savedRecipes = await this.saveGeneratedRecipes(recipesToSave, fingerprint);
 
         return {
             recipes: savedRecipes.map(this.toResponseDto),
@@ -95,76 +109,6 @@ export class RecipeService {
             generatedAt: new Date().toISOString(),
             fingerprint,
         };
-    }
-
-    /**
-     * Stub recipe generator (placeholder for LLM)
-     */
-    private generateStubRecipes(dto: GenerateRecipeDto): Partial<Recipe>[] {
-        const ingredientsList = dto.ingredients.join(', ');
-        const difficulty = dto.difficulty || RecipeDifficulty.MEDIUM;
-
-        return [
-            {
-                title: `Tumis ${dto.ingredients[0] || 'Sayuran'} Spesial`,
-                description: `Resep tumis lezat dengan bahan: ${ingredientsList}`,
-                ingredients: dto.ingredients.map((i) => `Secukupnya ${i}`),
-                steps: [
-                    'Siapkan semua bahan dan cuci bersih',
-                    'Panaskan minyak di wajan',
-                    'Tumis bumbu hingga harum',
-                    `Masukkan ${dto.ingredients[0] || 'bahan utama'}, aduk rata`,
-                    'Tambahkan bumbu penyedap secukupnya',
-                    'Masak hingga matang dan sajikan',
-                ],
-                estimatedTime: dto.maxTime || 30,
-                difficulty,
-                safetyNotes: ['Pastikan bahan sudah matang sempurna'],
-                tags: ['quick', 'easy', 'homemade'],
-            },
-            {
-                title: `Sup ${dto.ingredients[0] || 'Hangat'} Rumahan`,
-                description: `Sup hangat dengan campuran ${ingredientsList}`,
-                ingredients: [
-                    ...dto.ingredients.map((i) => `100g ${i}`),
-                    '1 liter air kaldu',
-                    'Garam dan merica secukupnya',
-                ],
-                steps: [
-                    'Didihkan air kaldu dalam panci',
-                    'Masukkan bahan-bahan satu per satu',
-                    'Masak dengan api sedang selama 20 menit',
-                    'Tambahkan garam dan merica',
-                    'Sajikan hangat',
-                ],
-                estimatedTime: (dto.maxTime || 30) + 10,
-                difficulty,
-                safetyNotes: ['Hati-hati dengan sup panas'],
-                tags: ['soup', 'comfort-food', 'healthy'],
-            },
-            {
-                title: `${dto.ingredients[0] || 'Bahan'} Panggang Madu`,
-                description: `Hidangan panggang dengan ${ingredientsList} dan saus madu`,
-                ingredients: [
-                    ...dto.ingredients.map((i) => `250g ${i}`),
-                    '3 sdm madu',
-                    '2 sdm kecap asin',
-                    '1 sdm minyak wijen',
-                ],
-                steps: [
-                    'Campurkan madu, kecap, dan minyak wijen untuk saus',
-                    'Lumuri bahan utama dengan saus',
-                    'Marinasi selama 15 menit',
-                    'Panggang di suhu 180°C selama 25 menit',
-                    'Olesi saus lagi di tengah proses',
-                    'Sajikan dengan garnish',
-                ],
-                estimatedTime: (dto.maxTime || 30) + 15,
-                difficulty: RecipeDifficulty.MEDIUM,
-                safetyNotes: ['Gunakan sarung tangan saat mengeluarkan dari oven'],
-                tags: ['baked', 'sweet', 'dinner'],
-            },
-        ];
     }
 
     /**
