@@ -16,6 +16,7 @@ import { HealthModule } from './modules/health';
 import { RecipeModule } from './modules/recipe';
 import { SessionModule } from './modules/session';
 import { EmbeddingModule } from './modules/embedding';
+import { FeedbackModule } from './modules/feedback';
 import { MetricsInterceptor } from './common/interceptors';
 import { SessionMiddleware } from './common/middleware';
 
@@ -71,6 +72,7 @@ import { SessionMiddleware } from './common/middleware';
     RecipeModule,
     SessionModule,
     EmbeddingModule,
+    FeedbackModule,
   ],
   controllers: [AppController],
   providers: [

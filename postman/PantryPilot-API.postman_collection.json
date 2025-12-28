@@ -280,6 +280,75 @@
                     "response": []
                 }
             ]
+        },
+        {
+            "name": "Feedback",
+            "description": "Recipe feedback and rating endpoints",
+            "item": [
+                {
+                    "name": "Submit Feedback/Rating",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Resep ini enak dan mudah diikuti!\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/:id/feedback",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                ":id",
+                                "feedback"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "uuid-here",
+                                    "description": "Recipe ID (UUID)"
+                                }
+                            ]
+                        },
+                        "description": "Submit rating (1-5) and optional comment for a recipe"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Aggregated Feedback",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/:id/feedback",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                ":id",
+                                "feedback"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "uuid-here",
+                                    "description": "Recipe ID (UUID)"
+                                }
+                            ]
+                        },
+                        "description": "Get average rating, rating distribution, and recent comments"
+                    },
+                    "response": []
+                }
+            ]
         }
     ]
 }
