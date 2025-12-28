@@ -19,6 +19,7 @@ import { EmbeddingModule } from './modules/embedding';
 import { FeedbackModule } from './modules/feedback';
 import { AllergenModule } from './modules/allergen';
 import { DietaryModule } from './modules/dietary';
+import { SafetyModule } from './modules/safety';
 import { MetricsInterceptor } from './common/interceptors';
 import { SessionMiddleware } from './common/middleware';
 
@@ -77,6 +78,7 @@ import { SessionMiddleware } from './common/middleware';
     FeedbackModule,
     AllergenModule,
     DietaryModule,
+    SafetyModule,
   ],
   controllers: [AppController],
   providers: [

@@ -172,27 +172,5 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 6.3 Safety Notes
 
-- [ ] Auto-generate cooking safety reminders
-- [ ] Ingredient-specific warnings (raw meat, shellfish, dll)
-
----
-
-## 🗓️ Phase 7 — Documentation & Demo Ready
-
-### 7.1 API Documentation
-
-- [ ] Setup Swagger/OpenAPI (`@nestjs/swagger`)
-- [ ] Document semua endpoints
-- [ ] Add request/response examples
-
-### 7.2 Demo Script
-
-- [ ] Buat demo seed data
-- [ ] Script untuk populate sample recipes
-- [ ] One-command startup script
-
-### 7.3 README & Setup Guide
-
-- [ ] Comprehensive README.md
-- [ ] Quick start guide
-- [ ] Environment variables documentation
+- [x] Auto-generate cooking safety reminders
+- [x] Ingredient-specific warnings (raw meat, shellfish, dll)

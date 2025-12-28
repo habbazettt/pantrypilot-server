@@ -7,6 +7,7 @@ import { GeminiService } from './gemini.service';
 import { EmbeddingService } from '../../embedding';
 import { AllergenService } from '../../allergen';
 import { DietaryService } from '../../dietary';
+import { SafetyService } from '../../safety';
 
 @Injectable()
 export class RecipeService {
@@ -18,6 +19,7 @@ export class RecipeService {
         private readonly embeddingService: EmbeddingService,
         private readonly allergenService: AllergenService,
         private readonly dietaryService: DietaryService,
+        private readonly safetyService: SafetyService,
     ) { }
 
     /**
@@ -155,8 +157,18 @@ export class RecipeService {
             return { ...recipe, tags: recipeTags };
         });
 
+        // Post-processing: Auto-generate safety notes
+        const finalRecipes = processedRecipes.map(recipe => {
+            const enhancedSafetyNotes = this.safetyService.generateSafetyNotes(
+                recipe.ingredients,
+                recipe.steps,
+                recipe.safetyNotes || []
+            );
+            return { ...recipe, safetyNotes: enhancedSafetyNotes };
+        });
+
         // Convert to entity format and save
-        const recipesToSave: Partial<Recipe>[] = processedRecipes.map((r) => ({
+        const recipesToSave: Partial<Recipe>[] = finalRecipes.map((r) => ({
             title: r.title,
             description: r.description,
             ingredients: r.ingredients,
