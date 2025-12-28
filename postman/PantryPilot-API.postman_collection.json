@@ -213,6 +213,47 @@
                         "description": "Find recipes similar to the specified recipe based on embedding similarity"
                     },
                     "response": []
+                },
+                {
+                    "name": "Get Alternative Recipes",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/alternatives?ingredients=ayam,bawang putih,kecap&allergies=&limit=5",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                "alternatives"
+                            ],
+                            "query": [
+                                {
+                                    "key": "ingredients",
+                                    "value": "ayam,bawang putih,kecap",
+                                    "description": "Comma-separated ingredients you have"
+                                },
+                                {
+                                    "key": "allergies",
+                                    "value": "",
+                                    "description": "Comma-separated allergies to avoid (optional)"
+                                },
+                                {
+                                    "key": "preferences",
+                                    "value": "",
+                                    "description": "Comma-separated dietary preferences (optional)"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "5",
+                                    "description": "Max number of results"
+                                }
+                            ]
+                        },
+                        "description": "Find recipes that match ingredients you have, with match score percentage"
+                    },
+                    "response": []
                 }
             ]
         },

@@ -131,9 +131,9 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 4.3 Alternative Suggestions
 
-- [ ] `GET /recipes/alternatives?ingredients=...`
-- [ ] Suggest recipes dengan substitusi bahan
-- [ ] Consider allergy/dietary filters
+- [x] `GET /recipes/alternatives?ingredients=...`
+- [x] Suggest recipes dengan substitusi bahan
+- [x] Consider allergy/dietary filters
 
 ---
 
