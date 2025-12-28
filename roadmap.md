@@ -125,9 +125,9 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 4.2 Similar Recipe Endpoint
 
-- [ ] `GET /recipes/:id/similar`
-- [ ] Limit jumlah hasil (top 3-5)
-- [ ] Exclude recipe yang sama dari hasil
+- [x] `GET /recipes/:id/similar`
+- [x] Limit jumlah hasil (top 3-5)
+- [x] Exclude recipe yang sama dari hasil
 
 ### 4.3 Alternative Suggestions
 

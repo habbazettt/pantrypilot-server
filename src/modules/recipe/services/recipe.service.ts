@@ -217,4 +217,71 @@ export class RecipeService {
 
         return similarRecipes.filter((r): r is RecipeResponseDto => r !== null);
     }
+
+    /**
+     * Find alternative recipes based on available ingredients
+     * Uses ingredient matching and embedding similarity
+     */
+    async findAlternatives(
+        ingredients: string[],
+        allergies: string[] = [],
+        preferences: string[] = [],
+        limit: number = 5,
+    ): Promise<{ recipes: RecipeResponseDto[]; matchScore: number }[]> {
+        // Get all recipes with embeddings
+        const allRecipes = await this.recipeRepository.findAllWithEmbeddings();
+
+        if (allRecipes.length === 0) {
+            this.logger.log('No recipes found for alternatives');
+            return [];
+        }
+
+        // Normalize input ingredients
+        const normalizedInput = ingredients.map(i => i.toLowerCase().trim());
+        const normalizedAllergies = allergies.map(a => a.toLowerCase().trim());
+
+        // Calculate match scores for each recipe
+        const scoredRecipes = allRecipes
+            .filter(recipe => {
+                // Filter out recipes containing allergens
+                if (normalizedAllergies.length > 0) {
+                    const recipeIngredients = recipe.ingredients.join(' ').toLowerCase();
+                    const hasAllergen = normalizedAllergies.some(allergen =>
+                        recipeIngredients.includes(allergen)
+                    );
+                    if (hasAllergen) return false;
+                }
+                return true;
+            })
+            .map(recipe => {
+                // Calculate ingredient match score
+                const recipeIngredients = recipe.ingredients.map(i => i.toLowerCase());
+                let matchCount = 0;
+
+                for (const inputIng of normalizedInput) {
+                    const hasMatch = recipeIngredients.some(recipeIng =>
+                        recipeIng.includes(inputIng) || inputIng.includes(recipeIng)
+                    );
+                    if (hasMatch) matchCount++;
+                }
+
+                // Score: percentage of input ingredients found in recipe
+                const matchScore = normalizedInput.length > 0
+                    ? Math.round((matchCount / normalizedInput.length) * 100)
+                    : 0;
+
+                return {
+                    recipe: this.toResponseDto(recipe),
+                    matchScore,
+                };
+            })
+            .filter(item => item.matchScore > 0) // Only include recipes with at least one match
+            .sort((a, b) => b.matchScore - a.matchScore)
+            .slice(0, limit);
+
+        return scoredRecipes.map(item => ({
+            recipes: [item.recipe],
+            matchScore: item.matchScore,
+        }));
+    }
 }

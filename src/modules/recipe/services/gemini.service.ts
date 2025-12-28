@@ -66,37 +66,65 @@ export class GeminiService implements OnModuleInit {
      * Build prompt for recipe generation
      */
     private buildPrompt(dto: GenerateRecipeDto): string {
-        const difficulty = dto.difficulty || 'any';
         const maxTime = dto.maxTime || 60;
-        const allergies = dto.allergies?.join(', ') || 'none';
-        const preferences = dto.preferences?.join(', ') || 'none';
+        const ingredientList = dto.ingredients.join(', ');
 
-        return `Kamu adalah chef profesional Indonesia. Buatkan 3 resep masakan berdasarkan bahan-bahan berikut:
+        // Build constraints
+        const constraints: string[] = [];
 
-BAHAN YANG TERSEDIA:
-${dto.ingredients.map((i) => `- ${i}`).join('\n')}
+        if (dto.difficulty && String(dto.difficulty) !== 'any') {
+            const difficultyMap: Record<string, string> = {
+                easy: 'mudah (cocok untuk pemula)',
+                medium: 'sedang (butuh sedikit pengalaman)',
+                hard: 'sulit (teknik masak tingkat lanjut)',
+            };
+            constraints.push(`Tingkat kesulitan: ${difficultyMap[dto.difficulty] || dto.difficulty}`);
+        }
 
-PREFERENSI:
-- Tingkat kesulitan: ${difficulty}
-- Waktu maksimal: ${maxTime} menit
-- Alergi/pantangan: ${allergies}
-- Preferensi diet: ${preferences}
+        if (dto.allergies && dto.allergies.length > 0) {
+            constraints.push(`HINDARI bahan berikut (alergi/pantangan): ${dto.allergies.join(', ')}`);
+        }
 
-FORMAT OUTPUT (JSON array, tanpa markdown code block):
+        if (dto.preferences && dto.preferences.length > 0) {
+            constraints.push(`Preferensi khusus: ${dto.preferences.join(', ')}`);
+        }
+
+        const constraintText = constraints.length > 0
+            ? `\n\nKONDISI KHUSUS:\n${constraints.map(c => `• ${c}`).join('\n')}`
+            : '';
+
+        return `Anda adalah seorang chef profesional dengan pengalaman 15 tahun di restoran bintang 5, spesialisasi masakan Indonesia, Asia, dan fusion. Seorang pelanggan datang dengan bahan-bahan yang mereka punya di rumah dan meminta rekomendasi menu.
+
+BAHAN YANG DIMILIKI PELANGGAN:
+${ingredientList}
+
+WAKTU MEMASAK MAKSIMAL: ${maxTime} menit${constraintText}
+
+TUGAS ANDA:
+Sebagai chef profesional, rekomendasikan 3 menu masakan berbeda yang bisa dibuat dengan bahan-bahan tersebut. Gunakan kreativitas dan pengetahuan kuliner Anda untuk memberikan resep yang:
+1. Autentik dan lezat - bukan resep generik
+2. Menggunakan bahan-bahan yang disediakan secara optimal
+3. Memiliki variasi (misal: satu masakan berkuah, satu tumisan, satu hidangan lain)
+4. Langkah-langkah yang detail dan bisa diikuti oleh home cook
+5. Termasuk tips memasak profesional jika relevan
+
+Anda boleh menambahkan bumbu dapur standar (garam, gula, minyak, bawang, cabai, dll) jika diperlukan untuk melengkapi resep.
+
+FORMAT RESPONS (JSON array):
 [
   {
-    "title": "Nama Resep",
-    "description": "Deskripsi singkat resep dalam 1-2 kalimat",
-    "ingredients": ["bahan 1 dengan takaran", "bahan 2 dengan takaran"],
-    "steps": ["Langkah 1", "Langkah 2", "Langkah 3"],
-    "estimatedTime": 30,
-    "difficulty": "easy|medium|hard",
-    "safetyNotes": ["catatan keamanan jika ada"],
-    "tags": ["tag1", "tag2"]
+    "title": "nama menu lengkap",
+    "description": "deskripsi appetizing tentang masakan ini, kenapa enak, tekstur dan rasa yang diharapkan",
+    "ingredients": ["bahan lengkap dengan takaran spesifik seperti di buku resep profesional"],
+    "steps": ["langkah detail, dengan waktu dan teknik memasak yang spesifik"],
+    "estimatedTime": angka dalam menit,
+    "difficulty": "easy" atau "medium" atau "hard",
+    "safetyNotes": ["tips keamanan dan kesehatan jika ada"],
+    "tags": ["kategori masakan, cocok untuk apa, dsb"]
   }
 ]
 
-Berikan resep yang praktis, mudah diikuti, dan sesuai dengan masakan Indonesia atau Asia. Pastikan semua bahan yang diminta terpakai.`;
+Berikan respons dalam format JSON saja, tanpa markdown code block.`;
     }
 
     /**
