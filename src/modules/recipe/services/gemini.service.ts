@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { GenerateRecipeDto } from '../dto';
 import { Recipe, RecipeDifficulty } from '../entities';
+import { DietaryService } from '../../dietary';
 
 export interface GeneratedRecipe {
     title: string;
@@ -21,7 +22,10 @@ export class GeminiService implements OnModuleInit {
     private genAI: GoogleGenerativeAI;
     private model: GenerativeModel;
 
-    constructor(private readonly configService: ConfigService) { }
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly dietaryService: DietaryService,
+    ) { }
 
     onModuleInit() {
         const apiKey = this.configService.get<string>('llm.geminiApiKey');
@@ -85,12 +89,23 @@ export class GeminiService implements OnModuleInit {
             constraints.push(`HINDARI bahan berikut (alergi/pantangan): ${dto.allergies.join(', ')}`);
         }
 
+        // Inject dietary preferences with detailed hints
         if (dto.preferences && dto.preferences.length > 0) {
-            constraints.push(`Preferensi khusus: ${dto.preferences.join(', ')}`);
+            const dietaryHints = this.dietaryService.buildPromptHints(dto.preferences);
+            if (dietaryHints.length > 0) {
+                constraints.push(`PREFERENSI DIET WAJIB DIPATUHI:`);
+                dietaryHints.forEach(hint => constraints.push(`  → ${hint}`));
+            }
+
+            // Get required tags for dietary preferences
+            const requiredTags = this.dietaryService.getRequiredTags(dto.preferences);
+            if (requiredTags.length > 0) {
+                constraints.push(`Tags yang WAJIB disertakan: ${requiredTags.join(', ')}`);
+            }
         }
 
         const constraintText = constraints.length > 0
-            ? `\n\nKONDISI KHUSUS:\n${constraints.map(c => `• ${c}`).join('\n')}`
+            ? `\n\nKONDISI KHUSUS (WAJIB DIPATUHI):\n${constraints.map(c => `• ${c}`).join('\n')}`
             : '';
 
         return `Anda adalah seorang chef profesional dengan pengalaman 15 tahun di restoran bintang 5, spesialisasi masakan Indonesia, Asia, dan fusion. Seorang pelanggan datang dengan bahan-bahan yang mereka punya di rumah dan meminta rekomendasi menu.

@@ -6,6 +6,7 @@ import { Recipe, RecipeDifficulty } from '../entities';
 import { GeminiService } from './gemini.service';
 import { EmbeddingService } from '../../embedding';
 import { AllergenService } from '../../allergen';
+import { DietaryService } from '../../dietary';
 
 @Injectable()
 export class RecipeService {
@@ -16,6 +17,7 @@ export class RecipeService {
         private readonly geminiService: GeminiService,
         private readonly embeddingService: EmbeddingService,
         private readonly allergenService: AllergenService,
+        private readonly dietaryService: DietaryService,
     ) { }
 
     /**
@@ -129,8 +131,32 @@ export class RecipeService {
             this.logger.log(`Filtered ${generatedRecipes.length - filteredRecipes.length} recipes containing allergens`);
         }
 
+        // Post-processing: Validate dietary compliance and add tags
+        const userPreferences = dto.preferences || [];
+        const processedRecipes = filteredRecipes.map(recipe => {
+            let recipeTags = [...(recipe.tags || [])];
+
+            // Check dietary compliance
+            if (userPreferences.length > 0) {
+                const compliance = this.dietaryService.checkCompliance(
+                    recipe.ingredients,
+                    userPreferences
+                );
+
+                if (compliance.compliant) {
+                    // Add dietary tags if compliant
+                    const requiredTags = this.dietaryService.getRequiredTags(userPreferences);
+                    recipeTags = [...new Set([...recipeTags, ...requiredTags])];
+                } else {
+                    this.logger.warn(`Recipe "${recipe.title}" may not fully comply: ${compliance.violations.join(', ')}`);
+                }
+            }
+
+            return { ...recipe, tags: recipeTags };
+        });
+
         // Convert to entity format and save
-        const recipesToSave: Partial<Recipe>[] = filteredRecipes.map((r) => ({
+        const recipesToSave: Partial<Recipe>[] = processedRecipes.map((r) => ({
             title: r.title,
             description: r.description,
             ingredients: r.ingredients,

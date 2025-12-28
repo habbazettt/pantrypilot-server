@@ -160,15 +160,15 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 6.1 Allergy Filtering
 
-- [ ] Define common allergens list
-- [ ] Post-processing filter untuk LLM output
-- [ ] Validate ingredients terhadap allergen database
+- [x] Define common allergens list
+- [x] Post-processing filter untuk LLM output
+- [x] Validate ingredients terhadap allergen database
 
 ### 6.2 Dietary Preferences
 
-- [ ] Support filters: vegetarian, vegan, halal, gluten-free
-- [ ] Inject preferences ke LLM prompt
-- [ ] Tag recipes dengan dietary info
+- [x] Support filters: vegetarian, vegan, halal, gluten-free
+- [x] Inject preferences ke LLM prompt
+- [x] Tag recipes dengan dietary info
 
 ### 6.3 Safety Notes
 
@@ -177,49 +177,21 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ---
 
-## 🗓️ Phase 7 — Reliability & Performance
+## 🗓️ Phase 7 — Documentation & Demo Ready
 
-### 7.1 Rate Limiting
-
-- [ ] Implement rate limiter (nestjs-rate-limiter)
-- [ ] Konfigurasi per endpoint
-- [ ] Custom responses untuk rate limited requests
-
-### 7.2 Error Handling
-
-- [ ] Global exception filter
-- [ ] Standardized error response format
-- [ ] User-friendly error messages
-
-### 7.3 Logging & Monitoring
-
-- [ ] Structured logging (Winston/Pino)
-- [ ] Request/Response logging
-- [ ] Error tracking setup
-
-### 7.4 Performance Optimization
-
-- [ ] Database query optimization
-- [ ] Connection pooling
-- [ ] Response compression
-
----
-
-## 🗓️ Phase 8 — Documentation & Demo Ready
-
-### 8.1 API Documentation
+### 7.1 API Documentation
 
 - [ ] Setup Swagger/OpenAPI (`@nestjs/swagger`)
 - [ ] Document semua endpoints
 - [ ] Add request/response examples
 
-### 8.2 Demo Script
+### 7.2 Demo Script
 
 - [ ] Buat demo seed data
 - [ ] Script untuk populate sample recipes
 - [ ] One-command startup script
 
-### 8.3 README & Setup Guide
+### 7.3 README & Setup Guide
 
 - [ ] Comprehensive README.md
 - [ ] Quick start guide

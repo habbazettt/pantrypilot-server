@@ -392,6 +392,49 @@
                     "response": []
                 }
             ]
+        },
+        {
+            "name": "Dietary",
+            "description": "Dietary preference endpoints",
+            "item": [
+                {
+                    "name": "Get All Dietary Preferences",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/dietary",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "dietary"
+                            ]
+                        },
+                        "description": "Get all dietary preferences with their rules and excluded ingredients"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Dietary Preference Names",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/dietary/names",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "dietary",
+                                "names"
+                            ]
+                        },
+                        "description": "Get list of supported dietary preference names"
+                    },
+                    "response": []
+                }
+            ]
         }
     ]
 }
