@@ -87,19 +87,9 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 2.3 Generate Endpoint
 
-- [ ] `POST /recipes/generate`
-- [ ] Input validation dengan class-validator
-- [ ] Safe defaults untuk optional fields
-
-### 2.4 Cache Implementation (Redis)
-
-- [ ] Implement input fingerprinting (hash dari ingredients + preferences)
-- [ ] Cache-aside pattern:
-  1. Check Redis cache dengan fingerprint
-  2. Jika hit → return cached result
-  3. Jika miss → generate → store → return
-- [ ] TTL configuration (misal 24 jam)
-- [ ] Cache invalidation strategy
+- [x] `POST /recipes/generate`
+- [x] Input validation dengan class-validator
+- [x] Safe defaults untuk optional fields
 
 ---
 
@@ -107,20 +97,20 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 3.1 Database Schema
 
-- [ ] Buat migrations untuk tables:
+- [x] Buat migrations untuk tables
 
 ### 3.2 Recipe Persistence Endpoints
 
-- [ ] `POST /recipes/save` — Simpan resep
-- [ ] `GET /recipes/saved` — List resep tersimpan
-- [ ] `DELETE /recipes/saved/:id` — Hapus bookmark
-- [ ] `GET /recipes/:id` — Get single recipe detail
+- [x] `POST /recipes/save` — Simpan resep
+- [x] `GET /recipes/saved` — List resep tersimpan
+- [x] `DELETE /recipes/saved/:id` — Hapus bookmark
+- [x] `GET /recipes/:id` — Get single recipe detail
 
 ### 3.3 Anonymous Session Handling
 
-- [ ] Implement session token generation
-- [ ] Store session di Redis (short-lived)
-- [ ] Link saved recipes ke session ID
+- [x] Implement session token generation
+- [x] Store session di Redis (short-lived)
+- [x] Link saved recipes ke session ID
 
 ---
 
@@ -128,10 +118,10 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 4.1 Embedding Generation
 
-- [ ] Pilih embedding model (sentence-transformers/all-MiniLM-L6-v2)
-- [ ] Buat embedding service
-- [ ] Generate embeddings untuk setiap recipe baru
-- [ ] Store embeddings (di PostgreSQL atau Redis)
+- [x] Pilih embedding model (sentence-transformers/all-MiniLM-L6-v2)
+- [x] Buat embedding service
+- [x] Generate embeddings untuk setiap recipe baru
+- [x] Store embeddings (di PostgreSQL atau Redis)
 
 ### 4.2 Redis Vector Index
 

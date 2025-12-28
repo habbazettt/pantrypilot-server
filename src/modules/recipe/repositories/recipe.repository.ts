@@ -60,4 +60,26 @@ export class RecipeRepository {
             ratingCount: newCount,
         });
     }
+
+    async findSaved(sessionId?: string): Promise<Recipe[]> {
+        const where: any = { isSaved: true };
+        if (sessionId) {
+            where.sessionId = sessionId;
+        }
+        return this.repository.find({
+            where,
+            order: { updatedAt: 'DESC' },
+        });
+    }
+
+    async setSaved(id: string, isSaved: boolean): Promise<Recipe | null> {
+        return this.update(id, { isSaved });
+    }
+
+    async findBySessionId(sessionId: string): Promise<Recipe[]> {
+        return this.repository.find({
+            where: { sessionId },
+            order: { createdAt: 'DESC' },
+        });
+    }
 }

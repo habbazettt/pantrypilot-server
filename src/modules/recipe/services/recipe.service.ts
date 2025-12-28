@@ -4,6 +4,7 @@ import { RecipeRepository } from '../repositories';
 import { GenerateRecipeDto, GenerateRecipeResponseDto, RecipeResponseDto } from '../dto';
 import { Recipe, RecipeDifficulty } from '../entities';
 import { GeminiService } from './gemini.service';
+import { EmbeddingService } from '../../embedding';
 
 @Injectable()
 export class RecipeService {
@@ -12,6 +13,7 @@ export class RecipeService {
     constructor(
         private readonly recipeRepository: RecipeRepository,
         private readonly geminiService: GeminiService,
+        private readonly embeddingService: EmbeddingService,
     ) { }
 
     /**
@@ -52,18 +54,33 @@ export class RecipeService {
     }
 
     /**
-     * Save generated recipes to database
+     * Save generated recipes to database with embeddings
      */
     async saveGeneratedRecipes(
         recipes: Partial<Recipe>[],
         fingerprint: string,
     ): Promise<Recipe[]> {
-        const recipesWithFingerprint = recipes.map((r) => ({
-            ...r,
-            inputFingerprint: fingerprint,
-            isGenerated: true,
-        }));
-        return this.recipeRepository.createMany(recipesWithFingerprint);
+        // Generate embeddings for each recipe
+        const recipesWithEmbeddings = await Promise.all(
+            recipes.map(async (r) => {
+                const embedding = await this.embeddingService.generateRecipeEmbedding({
+                    title: r.title || '',
+                    description: r.description,
+                    ingredients: r.ingredients || [],
+                    tags: r.tags,
+                });
+
+                return {
+                    ...r,
+                    inputFingerprint: fingerprint,
+                    isGenerated: true,
+                    embedding: embedding ?? undefined,
+                };
+            }),
+        );
+
+        this.logger.log(`Generated embeddings for ${recipesWithEmbeddings.length} recipes`);
+        return this.recipeRepository.createMany(recipesWithEmbeddings);
     }
 
     /**
@@ -128,5 +145,29 @@ export class RecipeService {
             rating: recipe.rating,
             createdAt: recipe.createdAt,
         };
+    }
+
+    /**
+     * Find all saved/bookmarked recipes for a session
+     */
+    async findSaved(sessionId?: string): Promise<RecipeResponseDto[]> {
+        const recipes = await this.recipeRepository.findSaved(sessionId);
+        return recipes.map(this.toResponseDto);
+    }
+
+    /**
+     * Save/bookmark a recipe
+     */
+    async saveRecipe(recipeId: string): Promise<RecipeResponseDto | null> {
+        const recipe = await this.recipeRepository.setSaved(recipeId, true);
+        return recipe ? this.toResponseDto(recipe) : null;
+    }
+
+    /**
+     * Unsave/remove bookmark from a recipe
+     */
+    async unsaveRecipe(recipeId: string): Promise<boolean> {
+        const recipe = await this.recipeRepository.setSaved(recipeId, false);
+        return recipe !== null;
     }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@nestjs-modules/ioredis';
@@ -14,7 +14,10 @@ import { appConfig, databaseConfig, redisConfig, llmConfig } from './config';
 import { validationSchema } from './config/validation.schema';
 import { HealthModule } from './modules/health';
 import { RecipeModule } from './modules/recipe';
+import { SessionModule } from './modules/session';
+import { EmbeddingModule } from './modules/embedding';
 import { MetricsInterceptor } from './common/interceptors';
+import { SessionMiddleware } from './common/middleware';
 
 @Module({
   imports: [
@@ -66,6 +69,8 @@ import { MetricsInterceptor } from './common/interceptors';
     // Feature modules
     HealthModule,
     RecipeModule,
+    SessionModule,
+    EmbeddingModule,
   ],
   controllers: [AppController],
   providers: [
@@ -89,4 +94,8 @@ import { MetricsInterceptor } from './common/interceptors';
     },
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SessionMiddleware).forRoutes('recipes');
+  }
+}
