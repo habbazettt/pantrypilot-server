@@ -170,4 +170,51 @@ export class RecipeService {
         const recipe = await this.recipeRepository.setSaved(recipeId, false);
         return recipe !== null;
     }
+
+    /**
+     * Find similar recipes based on embedding similarity
+     */
+    async findSimilarRecipes(
+        recipeId: string,
+        limit: number = 5,
+    ): Promise<RecipeResponseDto[]> {
+        // Get the target recipe
+        const targetRecipe = await this.recipeRepository.findById(recipeId);
+        if (!targetRecipe || !targetRecipe.embedding) {
+            this.logger.warn(`Recipe ${recipeId} not found or has no embedding`);
+            return [];
+        }
+
+        // Get all recipes with embeddings
+        const allRecipes = await this.recipeRepository.findAllWithEmbeddings();
+
+        // Filter out the target recipe and calculate similarities
+        const candidates = allRecipes
+            .filter((r) => r.id !== recipeId && r.embedding)
+            .map((r) => ({
+                id: r.id,
+                embedding: r.embedding!,
+            }));
+
+        if (candidates.length === 0) {
+            return [];
+        }
+
+        // Find similar using embedding service
+        const similar = this.embeddingService.findSimilar(
+            targetRecipe.embedding,
+            candidates,
+            limit,
+        );
+
+        // Get full recipe data for similar recipes
+        const similarRecipes = await Promise.all(
+            similar.map(async (s) => {
+                const recipe = await this.recipeRepository.findById(s.id);
+                return recipe ? this.toResponseDto(recipe) : null;
+            }),
+        );
+
+        return similarRecipes.filter((r): r is RecipeResponseDto => r !== null);
+    }
 }

@@ -113,4 +113,20 @@ export class RecipeController {
         }
         return recipe;
     }
+
+    @Get(':id/similar')
+    @ApiOperation({
+        summary: 'Get similar recipes',
+        description: 'Find recipes similar to the specified recipe based on embedding similarity',
+    })
+    @ApiParam({ name: 'id', description: 'Recipe ID (UUID)' })
+    @ApiResponse({
+        status: 200,
+        description: 'List of similar recipes',
+        type: [RecipeResponseDto],
+    })
+    @ApiResponse({ status: 404, description: 'Recipe not found' })
+    async findSimilar(@Param('id') id: string): Promise<RecipeResponseDto[]> {
+        return this.recipeService.findSimilarRecipes(id, 5);
+    }
 }

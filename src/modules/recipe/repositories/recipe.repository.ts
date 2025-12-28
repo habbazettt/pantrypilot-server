@@ -82,4 +82,11 @@ export class RecipeRepository {
             order: { createdAt: 'DESC' },
         });
     }
+
+    async findAllWithEmbeddings(): Promise<Recipe[]> {
+        return this.repository
+            .createQueryBuilder('recipe')
+            .where('recipe.embedding IS NOT NULL')
+            .getMany();
+    }
 }

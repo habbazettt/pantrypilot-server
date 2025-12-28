@@ -186,6 +186,33 @@
                         "description": "Retrieve a specific recipe by its ID"
                     },
                     "response": []
+                },
+                {
+                    "name": "Get Similar Recipes",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/:id/similar",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                ":id",
+                                "similar"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "uuid-here",
+                                    "description": "Recipe ID to find similar recipes for"
+                                }
+                            ]
+                        },
+                        "description": "Find recipes similar to the specified recipe based on embedding similarity"
+                    },
+                    "response": []
                 }
             ]
         },

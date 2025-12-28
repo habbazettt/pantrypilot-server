@@ -123,19 +123,13 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 - [x] Generate embeddings untuk setiap recipe baru
 - [x] Store embeddings (di PostgreSQL atau Redis)
 
-### 4.2 Redis Vector Index
-
-- [ ] Setup Redis Search module
-- [ ] Create vector index untuk recipe embeddings
-- [ ] Implement similarity search function (KNN)
-
-### 4.3 Similar Recipe Endpoint
+### 4.2 Similar Recipe Endpoint
 
 - [ ] `GET /recipes/:id/similar`
 - [ ] Limit jumlah hasil (top 3-5)
 - [ ] Exclude recipe yang sama dari hasil
 
-### 4.4 Alternative Suggestions
+### 4.3 Alternative Suggestions
 
 - [ ] `GET /recipes/alternatives?ingredients=...`
 - [ ] Suggest recipes dengan substitusi bahan
