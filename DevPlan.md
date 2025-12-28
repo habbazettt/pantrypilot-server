@@ -197,19 +197,6 @@ Benefit: demo berjalan mulus tanpa error tiba-tiba.
 
 ---
 
-## Phase 7 — Launch (Local or Hosted)
-
-Deliverables:
-
-* Docker-based demo script
-* Optional: hosting backend → Railway/Render, frontend → Netlify/Vercel
-* Dokumentasi 1 halaman (untuk user)
-* Short video rundown (optional)
-
-Benefit: siap dipresentasikan ke stakeholder atau publik.
-
----
-
 # 4. Mapping: Business Features → Technical Work
 
 | Business Feature    | Technical Implementation            |
