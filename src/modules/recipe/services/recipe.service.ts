@@ -5,6 +5,7 @@ import { GenerateRecipeDto, GenerateRecipeResponseDto, RecipeResponseDto } from 
 import { Recipe, RecipeDifficulty } from '../entities';
 import { GeminiService } from './gemini.service';
 import { EmbeddingService } from '../../embedding';
+import { AllergenService } from '../../allergen';
 
 @Injectable()
 export class RecipeService {
@@ -14,6 +15,7 @@ export class RecipeService {
         private readonly recipeRepository: RecipeRepository,
         private readonly geminiService: GeminiService,
         private readonly embeddingService: EmbeddingService,
+        private readonly allergenService: AllergenService,
     ) { }
 
     /**
@@ -106,8 +108,29 @@ export class RecipeService {
         this.logger.log('Cache miss, generating new recipes with Gemini...');
         const generatedRecipes = await this.geminiService.generateRecipes(dto);
 
+        // Post-processing: Filter recipes that contain user allergens
+        const userAllergens = dto.allergies || [];
+        const filteredRecipes = generatedRecipes.filter(recipe => {
+            if (userAllergens.length === 0) return true;
+
+            const validation = this.allergenService.validateRecipe(
+                { title: recipe.title, ingredients: recipe.ingredients, description: recipe.description },
+                userAllergens
+            );
+
+            if (!validation.isSafe) {
+                this.logger.warn(`Recipe "${recipe.title}" filtered out: ${validation.warnings.join(', ')}`);
+                return false;
+            }
+            return true;
+        });
+
+        if (filteredRecipes.length < generatedRecipes.length) {
+            this.logger.log(`Filtered ${generatedRecipes.length - filteredRecipes.length} recipes containing allergens`);
+        }
+
         // Convert to entity format and save
-        const recipesToSave: Partial<Recipe>[] = generatedRecipes.map((r) => ({
+        const recipesToSave: Partial<Recipe>[] = filteredRecipes.map((r) => ({
             title: r.title,
             description: r.description,
             ingredients: r.ingredients,

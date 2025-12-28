@@ -95,6 +95,31 @@ export class RecipeController {
         return this.recipeService.findAll();
     }
 
+    // IMPORTANT: /alternatives MUST come BEFORE /:id to avoid route conflict
+    @Get('alternatives')
+    @ApiOperation({
+        summary: 'Get alternative recipes',
+        description: 'Find recipes that can be made with ingredients you have, with substitution suggestions',
+    })
+    @ApiQuery({ name: 'ingredients', required: true, description: 'Comma-separated ingredients' })
+    @ApiQuery({ name: 'allergies', required: false, description: 'Comma-separated allergies to avoid' })
+    @ApiQuery({ name: 'preferences', required: false, description: 'Comma-separated dietary preferences' })
+    @ApiQuery({ name: 'limit', required: false, description: 'Max results (default 5)' })
+    @ApiResponse({
+        status: 200,
+        description: 'List of alternative recipes with match scores',
+    })
+    async findAlternatives(
+        @Query() query: AlternativesQueryDto,
+    ): Promise<{ recipes: RecipeResponseDto[]; matchScore: number }[]> {
+        const ingredients = query.ingredients.split(',').map(i => i.trim()).filter(Boolean);
+        const allergies = query.allergies?.split(',').map(i => i.trim()).filter(Boolean) || [];
+        const preferences = query.preferences?.split(',').map(i => i.trim()).filter(Boolean) || [];
+        const limit = parseInt(query.limit || '5', 10);
+
+        return this.recipeService.findAlternatives(ingredients, allergies, preferences, limit);
+    }
+
     @Get(':id')
     @ApiOperation({
         summary: 'Get recipe by ID',
@@ -129,29 +154,5 @@ export class RecipeController {
     @ApiResponse({ status: 404, description: 'Recipe not found' })
     async findSimilar(@Param('id') id: string): Promise<RecipeResponseDto[]> {
         return this.recipeService.findSimilarRecipes(id, 5);
-    }
-
-    @Get('alternatives')
-    @ApiOperation({
-        summary: 'Get alternative recipes',
-        description: 'Find recipes that can be made with ingredients you have, with substitution suggestions',
-    })
-    @ApiQuery({ name: 'ingredients', required: true, description: 'Comma-separated ingredients' })
-    @ApiQuery({ name: 'allergies', required: false, description: 'Comma-separated allergies to avoid' })
-    @ApiQuery({ name: 'preferences', required: false, description: 'Comma-separated dietary preferences' })
-    @ApiQuery({ name: 'limit', required: false, description: 'Max results (default 5)' })
-    @ApiResponse({
-        status: 200,
-        description: 'List of alternative recipes with match scores',
-    })
-    async findAlternatives(
-        @Query() query: AlternativesQueryDto,
-    ): Promise<{ recipes: RecipeResponseDto[]; matchScore: number }[]> {
-        const ingredients = query.ingredients.split(',').map(i => i.trim()).filter(Boolean);
-        const allergies = query.allergies?.split(',').map(i => i.trim()).filter(Boolean) || [];
-        const preferences = query.preferences?.split(',').map(i => i.trim()).filter(Boolean) || [];
-        const limit = parseInt(query.limit || '5', 10);
-
-        return this.recipeService.findAlternatives(ingredients, allergies, preferences, limit);
     }
 }

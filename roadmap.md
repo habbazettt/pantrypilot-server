@@ -141,18 +141,18 @@ Roadmap ini menjabarkan langkah-langkah teknis untuk membangun **pantrypilot-ser
 
 ### 5.1 Feedback Schema
 
-- [ ] Buat feedback table:
+- [x] Buat feedback table:
 
 ### 5.2 Feedback Endpoints
 
-- [ ] `POST /recipes/:id/feedback`
-- [ ] `GET /recipes/:id/feedback` — Get aggregated feedback
-- [ ] Rate limiting untuk mencegah spam
+- [x] `POST /recipes/:id/feedback`
+- [x] `GET /recipes/:id/feedback` — Get aggregated feedback
+- [x] Rate limiting untuk mencegah spam
 
 ### 5.3 Feedback Analytics (Optional)
 
-- [ ] Aggregate rating per recipe
-- [ ] Use feedback untuk improve recommendations
+- [x] Aggregate rating per recipe
+- [x] Use feedback untuk improve recommendations
 
 ---
 

@@ -349,6 +349,49 @@
                     "response": []
                 }
             ]
+        },
+        {
+            "name": "Allergens",
+            "description": "Allergen database endpoints",
+            "item": [
+                {
+                    "name": "Get All Allergens",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/allergens",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "allergens"
+                            ]
+                        },
+                        "description": "Get all allergen categories with details"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Allergen Names",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/allergens/names",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "allergens",
+                                "names"
+                            ]
+                        },
+                        "description": "Get flat list of all allergen names and aliases"
+                    },
+                    "response": []
+                }
+            ]
         }
     ]
 }
