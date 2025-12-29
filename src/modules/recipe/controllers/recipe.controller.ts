@@ -43,8 +43,11 @@ export class RecipeController {
         type: RecipeResponseDto,
     })
     @ApiResponse({ status: 404, description: 'Recipe not found' })
-    async saveRecipe(@Body() dto: SaveRecipeDto): Promise<RecipeResponseDto> {
-        const recipe = await this.recipeService.saveRecipe(dto.recipeId);
+    async saveRecipe(
+        @Body() dto: SaveRecipeDto,
+        @Req() req: express.Request,
+    ): Promise<RecipeResponseDto> {
+        const recipe = await this.recipeService.saveRecipe(dto.recipeId, (req as any).sessionToken);
         if (!recipe) {
             throw new NotFoundException(`Recipe with ID ${dto.recipeId} not found`);
         }

@@ -72,8 +72,12 @@ export class RecipeRepository {
         });
     }
 
-    async setSaved(id: string, isSaved: boolean): Promise<Recipe | null> {
-        return this.update(id, { isSaved });
+    async setSaved(id: string, isSaved: boolean, sessionId?: string): Promise<Recipe | null> {
+        const updateData: Partial<Recipe> = { isSaved };
+        if (sessionId && isSaved) {
+            updateData.sessionId = sessionId;
+        }
+        return this.update(id, updateData);
     }
 
     async findBySessionId(sessionId: string): Promise<Recipe[]> {

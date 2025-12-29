@@ -219,8 +219,8 @@ export class RecipeService {
     /**
      * Save/bookmark a recipe
      */
-    async saveRecipe(recipeId: string): Promise<RecipeResponseDto | null> {
-        const recipe = await this.recipeRepository.setSaved(recipeId, true);
+    async saveRecipe(recipeId: string, sessionId?: string): Promise<RecipeResponseDto | null> {
+        const recipe = await this.recipeRepository.setSaved(recipeId, true, sessionId);
         return recipe ? this.toResponseDto(recipe) : null;
     }
 
