@@ -16,11 +16,11 @@ export class FeedbackService {
     async createFeedback(
         recipeId: string,
         dto: CreateFeedbackDto,
-        sessionId?: string,
+        userId?: string,
     ): Promise<FeedbackResponseDto> {
         // Rate limiting check
-        if (sessionId) {
-            const todayCount = await this.feedbackRepository.countBySessionToday(sessionId);
+        if (userId) {
+            const todayCount = await this.feedbackRepository.countByUserToday(userId);
             if (todayCount >= this.MAX_FEEDBACK_PER_DAY) {
                 throw new HttpException(
                     `You have reached the daily limit of ${this.MAX_FEEDBACK_PER_DAY} feedback submissions`,
@@ -30,9 +30,9 @@ export class FeedbackService {
 
             // Check if user already rated this recipe (only for rating type)
             if (dto.type === FeedbackType.RATING || (!dto.type && dto.rating)) {
-                const existingRating = await this.feedbackRepository.findByRecipeIdAndSession(
+                const existingRating = await this.feedbackRepository.findByRecipeIdAndUser(
                     recipeId,
-                    sessionId,
+                    userId,
                 );
                 if (existingRating) {
                     throw new BadRequestException('You have already rated this recipe');
@@ -47,7 +47,7 @@ export class FeedbackService {
 
         const feedback = await this.feedbackRepository.create({
             recipeId,
-            sessionId,
+            userId,
             type: dto.type || (dto.rating ? FeedbackType.RATING : FeedbackType.COMMENT),
             rating: dto.rating,
             comment: dto.comment,

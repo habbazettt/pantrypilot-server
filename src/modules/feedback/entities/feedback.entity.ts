@@ -30,7 +30,11 @@ export class Feedback {
 
     @Index()
     @Column({ length: 64, nullable: true })
-    sessionId: string; // anonymous session ID
+    sessionId: string; // anonymous session ID (legacy)
+
+    @Index()
+    @Column('uuid', { nullable: true })
+    userId: string; // authenticated user ID
 
     @Column({ type: 'enum', enum: FeedbackType, default: FeedbackType.RATING })
     type: FeedbackType;

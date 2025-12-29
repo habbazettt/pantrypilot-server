@@ -77,4 +77,21 @@ export class FeedbackRepository {
             .andWhere('feedback.createdAt >= :today', { today })
             .getCount();
     }
+
+    async countByUserToday(userId: string): Promise<number> {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return this.repository
+            .createQueryBuilder('feedback')
+            .where('feedback.userId = :userId', { userId })
+            .andWhere('feedback.createdAt >= :today', { today })
+            .getCount();
+    }
+
+    async findByRecipeIdAndUser(recipeId: string, userId: string): Promise<Feedback | null> {
+        return this.repository.findOne({
+            where: { recipeId, userId, type: FeedbackType.RATING },
+        });
+    }
 }

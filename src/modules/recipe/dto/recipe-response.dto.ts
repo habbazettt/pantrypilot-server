@@ -40,6 +40,9 @@ export class RecipeResponseDto {
     @ApiPropertyOptional({ example: 4.5 })
     rating?: number;
 
+    @ApiPropertyOptional({ example: 42, description: 'Number of reviews/ratings for this recipe' })
+    reviewCount?: number;
+
     @ApiProperty({ example: '2025-01-01T00:00:00.000Z' })
     createdAt: Date;
 }

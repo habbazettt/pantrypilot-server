@@ -20,17 +20,17 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ---
 
-## 🔧 Phase 2: Rating & Feedback System
+## ✅ Phase 2: Rating & Feedback System (COMPLETED)
 
 **Priority:** High | **Effort:** Medium
 
 ### Backend Tasks
 
-- [ ] Extend existing `Feedback` entity untuk rating (1-5 stars)
-- [ ] Create endpoint `POST /recipes/:id/rate` untuk submit rating
-- [ ] Create endpoint `GET /recipes/:id/reviews` untuk get all reviews
-- [ ] Implement average rating calculation di `RecipeRepository`
-- [ ] Add `reviewCount` dan `averageRating` ke `RecipeResponseDto`
+- [x] Extend existing `Feedback` entity untuk rating (1-5 stars) + userId
+- [x] Create endpoint `POST /recipes/:id/feedback` untuk submit rating (JWT protected)
+- [x] Create endpoint `GET /recipes/:id/feedback` untuk get aggregated feedback
+- [x] Implement average rating calculation di `FeedbackRepository`
+- [x] Add `reviewCount` ke `RecipeResponseDto`
 
 ### Frontend Tasks
 
