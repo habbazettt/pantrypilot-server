@@ -20,6 +20,8 @@ import { FeedbackModule } from './modules/feedback';
 import { AllergenModule } from './modules/allergen';
 import { DietaryModule } from './modules/dietary';
 import { SafetyModule } from './modules/safety';
+import { UserModule } from './modules/user';
+import { AuthModule } from './modules/auth';
 import { MetricsInterceptor } from './common/interceptors';
 import { SessionMiddleware } from './common/middleware';
 
@@ -79,6 +81,8 @@ import { SessionMiddleware } from './common/middleware';
     AllergenModule,
     DietaryModule,
     SafetyModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

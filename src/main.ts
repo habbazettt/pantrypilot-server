@@ -48,6 +48,8 @@ async function bootstrap() {
       'Backend API untuk PantryPilot - aplikasi generator resep berbasis bahan makanan.',
     )
     .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('auth', 'Authentication endpoints')
     .addTag('health', 'Health check endpoints')
     .addTag('recipes', 'Recipe generation dan management')
     .addTag('feedback', 'Recipe feedback system')

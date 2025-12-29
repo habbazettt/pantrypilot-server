@@ -62,77 +62,42 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ---
 
-## 🛒 Phase 4: Shopping List Generator
+## 🌍 Phase 4: Cuisine by Country Preferences
 
 **Priority:** High | **Effort:** Medium
 
 ### Backend Tasks
 
-- [ ] Create `ShoppingList` entity
+- [ ] Create `Cuisine` enum/constant with popular cuisines:
 
   ```typescript
-  interface ShoppingList {
-    id: string;
-    sessionId: string;
-    items: ShoppingItem[];
-    createdAt: Date;
-  }
-  
-  interface ShoppingItem {
-    ingredient: string;
-    quantity?: string;
-    recipeIds: string[]; // sources
-    checked: boolean;
+  enum Cuisine {
+    INDONESIAN = 'indonesian',
+    JAPANESE = 'japanese',
+    KOREAN = 'korean',
+    CHINESE = 'chinese',
+    THAI = 'thai',
+    INDIAN = 'indian',
+    ITALIAN = 'italian',
+    MEXICAN = 'mexican',
+    AMERICAN = 'american',
+    FRENCH = 'french',
+    MIDDLE_EASTERN = 'middle_eastern',
+    // ... more
   }
   ```
 
-- [ ] Create `POST /shopping-list/generate` - dari array of recipe IDs
-- [ ] Implement ingredient deduplication & merge logic
-- [ ] Create `GET /shopping-list` - get current list
-- [ ] Create `PATCH /shopping-list/:itemId` - toggle checked
-- [ ] Create `DELETE /shopping-list` - clear list
+- [ ] Update `GenerateRecipeDto` to include `cuisine?: string`
+- [ ] Modify Gemini prompt to incorporate cuisine preference
+- [ ] Add `cuisine` field to `Recipe` entity
+- [ ] Create `GET /cuisines` endpoint to list available cuisines
 
 ### Frontend Tasks
 
-- [ ] "Add to Shopping List" button di RecipeCard
-- [ ] Shopping List view/page
-- [ ] Checkbox untuk mark items as bought
-- [ ] Share/Export shopping list
-
----
-
-## 🏷️ Phase 5: Custom Tags & Collections
-
-**Priority:** Medium | **Effort:** Medium
-
-### Backend Tasks
-
-- [ ] Create `Collection` entity
-
-  ```typescript
-  interface Collection {
-    id: string;
-    sessionId: string;
-    name: string;
-    icon?: string;
-    recipeIds: string[];
-    createdAt: Date;
-  }
-  ```
-
-- [ ] Create CRUD endpoints for collections
-  - `POST /collections` - create collection
-  - `GET /collections` - list user collections
-  - `POST /collections/:id/recipes` - add recipe to collection
-  - `DELETE /collections/:id/recipes/:recipeId` - remove recipe
-- [ ] Update `RecipeResponseDto` to include `collections[]`
-
-### Frontend Tasks
-
-- [ ] Collection management UI
-- [ ] Drag & drop recipes into collections
-- [ ] Collection icons/colors picker
-- [ ] Default collections: "Favorites", "To Try", "Weeknight Dinners"
+- [ ] Cuisine selector dropdown/chips di Recipe Configuration
+- [ ] Display cuisine badge on RecipeCard
+- [ ] Filter by cuisine in My Cookbook
+- [ ] Popular cuisines quick-select buttons
 
 ---
 

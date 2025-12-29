@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Delete, Body, Param, Req, Query, NotFoundException } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Post, Delete, Body, Param, Req, Query, NotFoundException, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import * as express from 'express';
 import { RecipeService } from '../services';
+import { JwtAuthGuard } from '../../auth/guards';
 import {
     GenerateRecipeDto,
     GenerateRecipeResponseDto,
@@ -16,9 +17,11 @@ export class RecipeController {
     constructor(private readonly recipeService: RecipeService) { }
 
     @Post('generate')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiOperation({
         summary: 'Generate recipes from ingredients',
-        description: 'Generate 1-3 recipe suggestions based on provided ingredients using AI',
+        description: 'Generate 1-3 recipe suggestions based on provided ingredients using AI. Requires authentication.',
     })
     @ApiResponse({
         status: 201,
@@ -26,6 +29,7 @@ export class RecipeController {
         type: GenerateRecipeResponseDto,
     })
     @ApiResponse({ status: 400, description: 'Invalid input' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
     async generateRecipes(
         @Body() dto: GenerateRecipeDto,
     ): Promise<GenerateRecipeResponseDto> {
@@ -33,21 +37,24 @@ export class RecipeController {
     }
 
     @Post('save')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiOperation({
         summary: 'Save/bookmark a recipe',
-        description: 'Mark a recipe as saved/bookmarked for later access',
+        description: 'Mark a recipe as saved/bookmarked for later access. Requires authentication.',
     })
     @ApiResponse({
         status: 201,
         description: 'Recipe saved successfully',
         type: RecipeResponseDto,
     })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 404, description: 'Recipe not found' })
     async saveRecipe(
         @Body() dto: SaveRecipeDto,
-        @Req() req: express.Request,
+        @Req() req: any,
     ): Promise<RecipeResponseDto> {
-        const recipe = await this.recipeService.saveRecipe(dto.recipeId, (req as any).sessionToken);
+        const recipe = await this.recipeService.saveRecipe(dto.recipeId, req.user.userId);
         if (!recipe) {
             throw new NotFoundException(`Recipe with ID ${dto.recipeId} not found`);
         }
@@ -55,26 +62,32 @@ export class RecipeController {
     }
 
     @Get('saved')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiOperation({
         summary: 'Get all saved/bookmarked recipes',
-        description: 'Retrieve all recipes that have been saved/bookmarked for current session',
+        description: 'Retrieve all recipes that have been saved/bookmarked by the authenticated user.',
     })
     @ApiResponse({
         status: 200,
         description: 'List of saved recipes',
         type: [RecipeResponseDto],
     })
-    async findSaved(@Req() req: express.Request): Promise<RecipeResponseDto[]> {
-        return this.recipeService.findSaved((req as any).sessionToken);
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    async findSaved(@Req() req: any): Promise<RecipeResponseDto[]> {
+        return this.recipeService.findSaved(req.user.userId);
     }
 
     @Delete('saved/:id')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @ApiOperation({
         summary: 'Remove bookmark from a recipe',
-        description: 'Unsave/remove bookmark from a recipe',
+        description: 'Unsave/remove bookmark from a recipe. Requires authentication.',
     })
     @ApiParam({ name: 'id', description: 'Recipe ID (UUID)' })
     @ApiResponse({ status: 200, description: 'Recipe unsaved successfully' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 404, description: 'Recipe not found' })
     async unsaveRecipe(@Param('id') id: string): Promise<{ success: boolean }> {
         const result = await this.recipeService.unsaveRecipe(id);
