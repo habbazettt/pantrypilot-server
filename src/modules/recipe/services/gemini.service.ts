@@ -78,15 +78,15 @@ export class GeminiService implements OnModuleInit {
 
         if (dto.difficulty && String(dto.difficulty) !== 'any') {
             const difficultyMap: Record<string, string> = {
-                easy: 'mudah (cocok untuk pemula)',
-                medium: 'sedang (butuh sedikit pengalaman)',
-                hard: 'sulit (teknik masak tingkat lanjut)',
+                easy: 'easy (suitable for beginners)',
+                medium: 'medium (needs some experience)',
+                hard: 'hard (advanced cooking techniques)',
             };
-            constraints.push(`Tingkat kesulitan: ${difficultyMap[dto.difficulty] || dto.difficulty}`);
+            constraints.push(`Difficulty Level: ${difficultyMap[dto.difficulty] || dto.difficulty}`);
         }
 
         if (dto.allergies && dto.allergies.length > 0) {
-            constraints.push(`HINDARI bahan berikut (alergi/pantangan): ${dto.allergies.join(', ')}`);
+            constraints.push(`AVOID the following ingredients (allergies/restrictions): ${dto.allergies.join(', ')}`);
         }
 
         // Inject dietary preferences with detailed hints
@@ -100,46 +100,46 @@ export class GeminiService implements OnModuleInit {
             // Get required tags for dietary preferences
             const requiredTags = this.dietaryService.getRequiredTags(dto.preferences);
             if (requiredTags.length > 0) {
-                constraints.push(`Tags yang WAJIB disertakan: ${requiredTags.join(', ')}`);
+                constraints.push(`REQUIRED TAGS: ${requiredTags.join(', ')}`);
             }
         }
 
         const constraintText = constraints.length > 0
-            ? `\n\nKONDISI KHUSUS (WAJIB DIPATUHI):\n${constraints.map(c => `• ${c}`).join('\n')}`
+            ? `\n\nSPECIAL CONDITIONS (MUST COMPLY):\n${constraints.map(c => `• ${c}`).join('\n')}`
             : '';
 
-        return `Anda adalah seorang chef profesional dengan pengalaman 15 tahun di restoran bintang 5, spesialisasi masakan Indonesia, Asia, dan fusion. Seorang pelanggan datang dengan bahan-bahan yang mereka punya di rumah dan meminta rekomendasi menu.
+        return `You are a professional chef with 15 years of experience in 5-star restaurants, specializing in global cuisine (Asian, Western, Fusion). A customer has come with ingredients they have at home and wants recipe recommendations.
 
-BAHAN YANG DIMILIKI PELANGGAN:
+CUSTOMER'S INGREDIENTS:
 ${ingredientList}
 
-WAKTU MEMASAK MAKSIMAL: ${maxTime} menit${constraintText}
+MAX COOKING TIME: ${maxTime} minutes${constraintText}
 
-TUGAS ANDA:
-Sebagai chef profesional, rekomendasikan 3 menu masakan berbeda yang bisa dibuat dengan bahan-bahan tersebut. Gunakan kreativitas dan pengetahuan kuliner Anda untuk memberikan resep yang:
-1. Autentik dan lezat - bukan resep generik
-2. Menggunakan bahan-bahan yang disediakan secara optimal
-3. Memiliki variasi (misal: satu masakan berkuah, satu tumisan, satu hidangan lain)
-4. Langkah-langkah yang detail dan bisa diikuti oleh home cook
-5. Termasuk tips memasak profesional jika relevan
+YOUR TASK:
+As a professional chef, recommend 3 distinct recipes that can be made with these ingredients. Use your creativity and culinary knowledge to provide recipes that:
+1. Are authentic and delicious - not generic
+2. Utilize the provided ingredients optimally
+3. Offer variety (e.g., one soup, one stir-fry, one main dish)
+4. Include detailed steps suitable for a home cook
+5. Include professional cooking tips where relevant
 
-Anda boleh menambahkan bumbu dapur standar (garam, gula, minyak, bawang, cabai, dll) jika diperlukan untuk melengkapi resep.
+You may assume standard pantry staples (salt, sugar, oil, onions, garlic, chili, etc.) are available.
 
-FORMAT RESPONS (JSON array):
+RESPONSE FORMAT (JSON array only):
 [
   {
-    "title": "nama menu lengkap",
-    "description": "deskripsi appetizing tentang masakan ini, kenapa enak, tekstur dan rasa yang diharapkan",
-    "ingredients": ["bahan lengkap dengan takaran spesifik seperti di buku resep profesional"],
-    "steps": ["langkah detail, dengan waktu dan teknik memasak yang spesifik"],
-    "estimatedTime": angka dalam menit,
-    "difficulty": "easy" atau "medium" atau "hard",
-    "safetyNotes": ["tips keamanan dan kesehatan jika ada"],
-    "tags": ["kategori masakan, cocok untuk apa, dsb"]
+    "title": "Full recipe name",
+    "description": "Appetizing description of the dish, why it's good, expected texture and taste",
+    "ingredients": ["Detailed ingredient list with specific measurements"],
+    "steps": ["Detailed cooking steps with specific times and techniques"],
+    "estimatedTime": number (in minutes),
+    "difficulty": "easy" or "medium" or "hard",
+    "safetyNotes": ["Safety and health tips if any"],
+    "tags": ["Category, suitable for, etc."]
   }
 ]
 
-Berikan respons dalam format JSON saja, tanpa markdown code block.`;
+Provide the response in JSON format only, without markdown code blocks.`;
     }
 
     /**
@@ -199,20 +199,20 @@ Berikan respons dalam format JSON saja, tanpa markdown code block.`;
 
         return [
             {
-                title: `Tumis ${dto.ingredients[0] || 'Sayuran'} Spesial`,
-                description: `Resep tumis lezat dengan bahan: ${ingredientsList}`,
-                ingredients: dto.ingredients.map((i) => `Secukupnya ${i}`),
+                title: `Stir-fried ${dto.ingredients[0] || 'Vegetables'} Special`,
+                description: `A delicious stir-fry recipe using: ${ingredientsList}`,
+                ingredients: dto.ingredients.map((i) => `Enough ${i}`),
                 steps: [
-                    'Siapkan semua bahan dan cuci bersih',
-                    'Panaskan minyak di wajan',
-                    'Tumis bumbu hingga harum',
-                    `Masukkan ${dto.ingredients[0] || 'bahan utama'}, aduk rata`,
-                    'Tambahkan bumbu penyedap secukupnya',
-                    'Masak hingga matang dan sajikan',
+                    'Prepare all ingredients and wash them thoroughly',
+                    'Heat oil in a pan',
+                    'Sauté spices until fragrant',
+                    `Add ${dto.ingredients[0] || 'main ingredient'}, stir well`,
+                    'Add seasoning to taste',
+                    'Cook until done and serve',
                 ],
                 estimatedTime: dto.maxTime || 30,
                 difficulty,
-                safetyNotes: ['Pastikan bahan sudah matang sempurna'],
+                safetyNotes: ['Ensure ingredients are cooked thoroughly'],
                 tags: ['quick', 'easy', 'stub'],
             },
         ];
