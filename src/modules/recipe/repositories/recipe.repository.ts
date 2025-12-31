@@ -93,4 +93,72 @@ export class RecipeRepository {
             .where('recipe.embedding IS NOT NULL')
             .getMany();
     }
+
+    async search(params: {
+        q?: string;
+        difficulty?: string;
+        maxTime?: number;
+        tags?: string[];
+        sortBy?: string;
+        order?: 'asc' | 'desc';
+        limit?: number;
+        offset?: number;
+    }): Promise<{ data: Recipe[]; total: number }> {
+        const qb = this.repository.createQueryBuilder('recipe');
+
+        // Full-text search on title and description
+        if (params.q) {
+            qb.andWhere(
+                '(LOWER(recipe.title) LIKE LOWER(:q) OR LOWER(recipe.description) LIKE LOWER(:q))',
+                { q: `%${params.q}%` },
+            );
+        }
+
+        // Filter by difficulty
+        if (params.difficulty) {
+            qb.andWhere('recipe.difficulty = :difficulty', {
+                difficulty: params.difficulty,
+            });
+        }
+
+        // Filter by max cooking time
+        if (params.maxTime) {
+            qb.andWhere('recipe.estimatedTime <= :maxTime', {
+                maxTime: params.maxTime,
+            });
+        }
+
+        // Filter by tags (simple-array contains check)
+        if (params.tags && params.tags.length > 0) {
+            // For simple-array, we check if any of the tags are present
+            const tagConditions = params.tags.map((_, idx) =>
+                `recipe.tags LIKE :tag${idx}`
+            );
+            const tagParams: Record<string, string> = {};
+            params.tags.forEach((tag, idx) => {
+                tagParams[`tag${idx}`] = `%${tag}%`;
+            });
+            qb.andWhere(`(${tagConditions.join(' OR ')})`, tagParams);
+        }
+
+        // Get total count before pagination
+        const total = await qb.getCount();
+
+        // Sorting
+        const sortField = params.sortBy || 'createdAt';
+        const sortOrder = (params.order?.toUpperCase() as 'ASC' | 'DESC') || 'DESC';
+        qb.orderBy(`recipe.${sortField}`, sortOrder);
+
+        // Pagination
+        if (params.limit) {
+            qb.take(params.limit);
+        }
+        if (params.offset) {
+            qb.skip(params.offset);
+        }
+
+        const data = await qb.getMany();
+
+        return { data, total };
+    }
 }

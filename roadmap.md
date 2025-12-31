@@ -34,10 +34,10 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ### Frontend Tasks
 
-- [ ] Star rating component di RecipeCard
-- [ ] Rating modal after viewing recipe
-- [ ] Display average rating + total reviews
-- [ ] Sort recipes by rating option
+- [x] Star rating component di RecipeCard
+- [x] Rating modal after viewing recipe
+- [x] Display average rating + total reviews
+- [x] Sort recipes by rating option
 
 ---
 
@@ -47,18 +47,18 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ### Backend Tasks
 
-- [ ] Create `GET /recipes/search` endpoint with query params
-- [ ] Implement full-text search PostgreSQL (`tsvector`)
-- [ ] Add filter parameters: `difficulty`, `maxTime`, `tags`
-- [ ] Pagination support (`limit`, `offset`)
-- [ ] Sort options: `createdAt`, `rating`, `estimatedTime`
+- [x] Create `GET /recipes/search` endpoint with query params
+- [x] Implement full-text search PostgreSQL (`tsvector`)
+- [x] Add filter parameters: `difficulty`, `maxTime`, `tags`
+- [x] Pagination support (`limit`, `offset`)
+- [x] Sort options: `createdAt`, `rating`, `estimatedTime`
 
 ### Frontend Tasks
 
-- [ ] Search bar di My Cookbook
-- [ ] Filter chips (Quick filters)
-- [ ] Sort dropdown
-- [ ] Infinite scroll / Load more
+- [x] Search bar di My Cookbook
+- [x] Filter chips (Quick filters)
+- [x] Sort dropdown
+- [x] Infinite scroll / Load more
 
 ---
 
@@ -83,7 +83,6 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
     AMERICAN = 'american',
     FRENCH = 'french',
     MIDDLE_EASTERN = 'middle_eastern',
-    // ... more
   }
   ```
 

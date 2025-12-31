@@ -345,4 +345,40 @@ export class RecipeService {
             matchScore: item.matchScore,
         }));
     }
+
+    /**
+     * Search recipes with filters, sorting, and pagination
+     */
+    async search(params: {
+        q?: string;
+        difficulty?: string;
+        maxTime?: number;
+        tags?: string;
+        sortBy?: string;
+        order?: 'asc' | 'desc';
+        limit?: number;
+        offset?: number;
+    }): Promise<{
+        data: RecipeResponseDto[];
+        total: number;
+        limit: number;
+        offset: number;
+    }> {
+        const tagsArray = params.tags
+            ? params.tags.split(',').map(t => t.trim()).filter(Boolean)
+            : undefined;
+
+        const result = await this.recipeRepository.search({
+            ...params,
+            tags: tagsArray,
+        });
+
+        return {
+            data: result.data.map(this.toResponseDto),
+            total: result.total,
+            limit: params.limit || 10,
+            offset: params.offset || 0,
+        };
+    }
 }
+

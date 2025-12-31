@@ -70,6 +70,67 @@
                     "response": []
                 },
                 {
+                    "name": "Search Recipes",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/search?q=chicken&difficulty=easy&maxTime=30&tags=healthy&sortBy=createdAt&order=desc&limit=10&offset=0",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "chicken",
+                                    "description": "Search query"
+                                },
+                                {
+                                    "key": "difficulty",
+                                    "value": "easy",
+                                    "description": "Difficulty: easy, medium, hard"
+                                },
+                                {
+                                    "key": "maxTime",
+                                    "value": "30",
+                                    "description": "Max cooking time (minutes)"
+                                },
+                                {
+                                    "key": "tags",
+                                    "value": "healthy",
+                                    "description": "Comma-separated tags"
+                                },
+                                {
+                                    "key": "sortBy",
+                                    "value": "createdAt",
+                                    "description": "Sort field: createdAt, rating, estimatedTime"
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "desc",
+                                    "description": "Sort order: asc, desc"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "Items per page"
+                                },
+                                {
+                                    "key": "offset",
+                                    "value": "0",
+                                    "description": "Skip N items"
+                                }
+                            ]
+                        },
+                        "description": "Search for recipes with filters, sorting, and pagination"
+                    },
+                    "response": []
+                },
+                {
                     "name": "Save Recipe (Bookmark)",
                     "request": {
                         "method": "POST",

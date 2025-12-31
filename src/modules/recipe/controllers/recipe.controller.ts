@@ -9,6 +9,7 @@ import {
     RecipeResponseDto,
     SaveRecipeDto,
     AlternativesQueryDto,
+    SearchRecipeDto,
 } from '../dto';
 
 @ApiTags('recipes')
@@ -95,6 +96,34 @@ export class RecipeController {
             throw new NotFoundException(`Recipe with ID ${id} not found`);
         }
         return { success: true };
+    }
+
+    // IMPORTANT: /search MUST come BEFORE /:id to avoid route conflict
+    @Get('search')
+    @ApiOperation({
+        summary: 'Search recipes',
+        description: 'Search recipes with full-text search, filters, sorting, and pagination',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Paginated search results',
+    })
+    async search(@Query() query: SearchRecipeDto): Promise<{
+        data: RecipeResponseDto[];
+        total: number;
+        limit: number;
+        offset: number;
+    }> {
+        return this.recipeService.search({
+            q: query.q,
+            difficulty: query.difficulty,
+            maxTime: query.maxTime,
+            tags: query.tags,
+            sortBy: query.sortBy,
+            order: query.order,
+            limit: query.limit,
+            offset: query.offset,
+        });
     }
 
     @Get()
