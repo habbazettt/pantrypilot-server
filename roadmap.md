@@ -106,10 +106,10 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ### Backend Tasks
 
-- [ ] Create `GET /recipes/:id/share` - generate shareable link
-- [ ] Create `GET /recipes/shared/:shareId` - public recipe view
-- [ ] Generate OG image dynamically (Canvas/Sharp)
-- [ ] Rate limiting untuk share generation
+- [x] Create `GET /recipes/:id/share` - generate shareable link
+- [x] Create `GET /recipes/shared/:shareId` - public recipe view
+- [x] Generate OG image dynamically (Canvas/Sharp)
+- [x] Rate limiting untuk share generation
 
 ### Frontend Tasks
 
@@ -126,10 +126,10 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ### Tasks
 
+- [ ] 3d background effect (e.g. Vanta.js etc)
 - [ ] Smooth light/dark mode transitions
 - [ ] Loading skeletons untuk semua async content
 - [ ] Error boundaries & fallback UI
 - [ ] Accessibility audit (a11y)
 - [ ] Performance optimization (lazy loading, code splitting)
-- [ ] Mobile gesture support (swipe to save, pull to refresh)
-- [ ] Onboarding tutorial untuk first-time users
+- [ ] Onboarding tutorial untuk first-time users (How To Use dialog / page)

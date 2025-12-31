@@ -2,7 +2,8 @@ import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@nestjs-modules/ioredis';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import {
   PrometheusModule,
   makeCounterProvider,
@@ -72,6 +73,12 @@ import { SessionMiddleware } from './common/middleware';
       }),
     }),
 
+    // Rate limiting (10 requests per 60 seconds globally)
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 10,
+    }]),
+
     // Feature modules
     HealthModule,
     RecipeModule,
@@ -103,6 +110,11 @@ import { SessionMiddleware } from './common/middleware';
     {
       provide: APP_INTERCEPTOR,
       useClass: MetricsInterceptor,
+    },
+    // Global rate limiting guard
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

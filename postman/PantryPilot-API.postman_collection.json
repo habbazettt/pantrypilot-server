@@ -319,6 +319,100 @@
             ]
         },
         {
+            "name": "Social Sharing",
+            "description": "Recipe sharing and public access endpoints",
+            "item": [
+                {
+                    "name": "Generate Share Link",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "description": "JWT access token"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/:id/share",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                ":id",
+                                "share"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "uuid-here",
+                                    "description": "Recipe ID (UUID)"
+                                }
+                            ]
+                        },
+                        "description": "Generate a shareable link for a recipe (requires auth)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Shared Recipe (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/shared/:shareId",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                "shared",
+                                ":shareId"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "shareId",
+                                    "value": "abc123xyz456",
+                                    "description": "Short share ID"
+                                }
+                            ]
+                        },
+                        "description": "Access a shared recipe publicly (no auth required)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get OG Image (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/shared/:shareId/og-image",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                "shared",
+                                ":shareId",
+                                "og-image"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "shareId",
+                                    "value": "abc123xyz456",
+                                    "description": "Short share ID"
+                                }
+                            ]
+                        },
+                        "description": "Get OG image for social media preview (no auth required)"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
             "name": "Metrics",
             "description": "Prometheus metrics endpoint",
             "item": [

@@ -161,4 +161,8 @@ export class RecipeRepository {
 
         return { data, total };
     }
+
+    async findByShareId(shareId: string): Promise<Recipe | null> {
+        return this.repository.findOne({ where: { shareId } });
+    }
 }

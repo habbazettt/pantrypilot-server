@@ -75,6 +75,13 @@ export class Recipe {
     @Column({ length: 64, nullable: true })
     sessionId: string; // anonymous session ID
 
+    @Index({ unique: true })
+    @Column({ length: 16, nullable: true })
+    shareId: string; // short unique ID for sharing
+
+    @Column({ type: 'timestamp', nullable: true })
+    shareCreatedAt: Date; // when share link was created
+
     @Column({ type: 'simple-json', nullable: true })
     embedding: number[]; // vector embedding for similarity search
 

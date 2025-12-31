@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Delete, Body, Param, Req, Query, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Req, Res, Query, NotFoundException, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { SkipThrottle } from '@nestjs/throttler';
 import * as express from 'express';
 import { RecipeService } from '../services';
 import { JwtAuthGuard } from '../../auth/guards';
@@ -215,5 +216,155 @@ export class RecipeController {
     @ApiResponse({ status: 404, description: 'Recipe not found' })
     async findSimilar(@Param('id') id: string): Promise<RecipeResponseDto[]> {
         return this.recipeService.findSimilarRecipes(id, 5);
+    }
+
+    // ===== SOCIAL SHARING ENDPOINTS =====
+
+    @Get('shared/:shareId')
+    @SkipThrottle()
+    @ApiOperation({
+        summary: 'Get shared recipe (public)',
+        description: 'Access a shared recipe publicly using its share ID. No authentication required.',
+    })
+    @ApiParam({ name: 'shareId', description: 'Short share ID (12 chars)' })
+    @ApiResponse({
+        status: 200,
+        description: 'Shared recipe found',
+        type: RecipeResponseDto,
+    })
+    @ApiResponse({ status: 404, description: 'Shared recipe not found' })
+    async findByShareId(@Param('shareId') shareId: string): Promise<RecipeResponseDto> {
+        const recipe = await this.recipeService.findByShareId(shareId);
+        if (!recipe) {
+            throw new NotFoundException(`Shared recipe not found`);
+        }
+        return recipe;
+    }
+
+    @Get(':id/share')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiOperation({
+        summary: 'Generate share link',
+        description: 'Generate a shareable link for a recipe. Requires authentication.',
+    })
+    @ApiParam({ name: 'id', description: 'Recipe ID (UUID)' })
+    @ApiResponse({
+        status: 200,
+        description: 'Share link generated',
+        schema: {
+            example: {
+                shareId: 'abc123xyz456',
+                shareUrl: 'https://example.com/r/abc123xyz456',
+                ogImageUrl: 'https://example.com/api/recipes/shared/abc123xyz456/og-image',
+                createdAt: '2024-01-15T10:30:00Z',
+            },
+        },
+    })
+    @ApiResponse({ status: 404, description: 'Recipe not found' })
+    async generateShareLink(
+        @Param('id') id: string,
+        @Req() req: any,
+    ): Promise<{ shareId: string; shareUrl: string; ogImageUrl: string; createdAt: Date }> {
+        // Get base URL from request
+        const protocol = req.protocol || 'http';
+        const host = req.get('host') || 'localhost:3000';
+        const baseUrl = `${protocol}://${host}`;
+
+        const result = await this.recipeService.generateShareLink(id, baseUrl);
+        if (!result) {
+            throw new NotFoundException(`Recipe with ID ${id} not found`);
+        }
+        return result;
+    }
+
+    @Get('shared/:shareId/og-image')
+    @SkipThrottle()
+    @ApiOperation({
+        summary: 'Get OG image for shared recipe',
+        description: 'Dynamically generate Open Graph image for social media preview. No authentication required.',
+    })
+    @ApiParam({ name: 'shareId', description: 'Short share ID (12 chars)' })
+    @ApiResponse({
+        status: 200,
+        description: 'OG image PNG',
+        content: { 'image/png': {} },
+    })
+    @ApiResponse({ status: 404, description: 'Shared recipe not found' })
+    async getOgImage(
+        @Param('shareId') shareId: string,
+        @Req() _req: any,
+        @Res() res: express.Response,
+    ): Promise<void> {
+        const recipe = await this.recipeService.getRecipeByShareId(shareId);
+        if (!recipe) {
+            throw new NotFoundException(`Shared recipe not found`);
+        }
+
+        // Generate OG image using Sharp
+        const sharp = (await import('sharp')).default;
+
+        const width = 1200;
+        const height = 630;
+
+        // Escape HTML entities for SVG safety
+        const escapeHtml = (str: string) => str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+
+        const title = escapeHtml(recipe.title.slice(0, 50) + (recipe.title.length > 50 ? '...' : ''));
+        const description = escapeHtml((recipe.description || '').slice(0, 100) + ((recipe.description || '').length > 100 ? '...' : ''));
+        const time = recipe.estimatedTime;
+        const rating = recipe.rating ? recipe.rating.toFixed(1) : 'New';
+
+        const svgImage = `
+            <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#bg)"/>
+                
+                <!-- Logo area -->
+                <text x="60" y="80" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#4ade80">
+                    🍳 PantryPilot
+                </text>
+                
+                <!-- Title -->
+                <text x="60" y="200" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#ffffff">
+                    ${title}
+                </text>
+                
+                <!-- Stats -->
+                <text x="60" y="280" font-family="Arial, sans-serif" font-size="24" fill="#94a3b8">
+                    ⏱ ${time} mins  |  ⭐ ${rating}
+                </text>
+                
+                <!-- Description -->
+                <text x="60" y="360" font-family="Arial, sans-serif" font-size="20" fill="#64748b">
+                    ${description}
+                </text>
+                
+                <!-- Footer -->
+                <text x="60" y="580" font-family="Arial, sans-serif" font-size="18" fill="#475569">
+                    Share your cooking journey
+                </text>
+            </svg>
+        `;
+
+        const pngBuffer = await sharp(Buffer.from(svgImage))
+            .png()
+            .toBuffer();
+
+        res.set({
+            'Content-Type': 'image/png',
+            'Content-Length': pngBuffer.length,
+            'Cache-Control': 'public, max-age=86400',
+        });
+        res.send(pngBuffer);
     }
 }

@@ -383,5 +383,66 @@ export class RecipeService {
             offset: params.offset || 0,
         };
     }
+
+    /**
+     * Generate or retrieve share link for a recipe
+     */
+    async generateShareLink(recipeId: string, baseUrl: string): Promise<{
+        shareId: string;
+        shareUrl: string;
+        ogImageUrl: string;
+        createdAt: Date;
+    } | null> {
+        const { nanoid } = await import('nanoid');
+
+        const recipe = await this.recipeRepository.findById(recipeId);
+        if (!recipe) {
+            return null;
+        }
+
+        // If already has shareId, return existing
+        if (recipe.shareId) {
+            return {
+                shareId: recipe.shareId,
+                shareUrl: `${baseUrl}/r/${recipe.shareId}`,
+                ogImageUrl: `${baseUrl}/api/recipes/shared/${recipe.shareId}/og-image`,
+                createdAt: recipe.shareCreatedAt || recipe.createdAt,
+            };
+        }
+
+        // Generate new shareId
+        const shareId = nanoid(12);
+        const shareCreatedAt = new Date();
+
+        await this.recipeRepository.update(recipeId, {
+            shareId,
+            shareCreatedAt,
+        });
+
+        this.logger.log(`Generated share link for recipe ${recipeId}: ${shareId}`);
+
+        return {
+            shareId,
+            shareUrl: `${baseUrl}/r/${shareId}`,
+            ogImageUrl: `${baseUrl}/api/recipes/shared/${shareId}/og-image`,
+            createdAt: shareCreatedAt,
+        };
+    }
+
+    /**
+     * Find recipe by share ID (for public access)
+     */
+    async findByShareId(shareId: string): Promise<RecipeResponseDto | null> {
+        const recipe = await this.recipeRepository.findByShareId(shareId);
+        return recipe ? this.toResponseDto(recipe) : null;
+    }
+
+    /**
+     * Get recipe entity by share ID (for OG image generation)
+     */
+    async getRecipeByShareId(shareId: string): Promise<Recipe | null> {
+        return this.recipeRepository.findByShareId(shareId);
+    }
 }
+
 
