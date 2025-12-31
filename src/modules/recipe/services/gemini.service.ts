@@ -104,6 +104,10 @@ export class GeminiService implements OnModuleInit {
             }
         }
 
+        if (dto.cuisine) {
+            constraints.push(`CUISINE STYLE: ${dto.cuisine.toUpperCase()} (Ensure recipes are authentic to this cuisine)`);
+        }
+
         const constraintText = constraints.length > 0
             ? `\n\nSPECIAL CONDITIONS (MUST COMPLY):\n${constraints.map(c => `• ${c}`).join('\n')}`
             : '';

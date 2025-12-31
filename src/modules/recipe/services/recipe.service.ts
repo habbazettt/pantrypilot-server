@@ -32,6 +32,7 @@ export class RecipeService {
             difficulty: dto.difficulty || 'any',
             allergies: (dto.allergies || []).sort(),
             preferences: (dto.preferences || []).sort(),
+            cuisine: dto.cuisine || 'any',
         };
         return crypto.createHash('sha256').update(JSON.stringify(normalized)).digest('hex').slice(0, 16);
     }
@@ -177,6 +178,7 @@ export class RecipeService {
             difficulty: r.difficulty,
             safetyNotes: r.safetyNotes,
             tags: r.tags,
+            cuisine: dto.cuisine, // Set the requested cuisine
         }));
 
         const savedRecipes = await this.saveGeneratedRecipes(recipesToSave, fingerprint);
@@ -203,6 +205,7 @@ export class RecipeService {
             difficulty: recipe.difficulty,
             safetyNotes: recipe.safetyNotes,
             tags: recipe.tags,
+            cuisine: recipe.cuisine,
             rating: recipe.rating,
             createdAt: recipe.createdAt,
         };

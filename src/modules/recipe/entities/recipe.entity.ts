@@ -13,6 +13,8 @@ export enum RecipeDifficulty {
     HARD = 'hard',
 }
 
+import { Cuisine } from './cuisine.enum';
+
 @Entity('recipes')
 export class Recipe {
     @PrimaryGeneratedColumn('uuid')
@@ -39,6 +41,13 @@ export class Recipe {
         default: RecipeDifficulty.MEDIUM,
     })
     difficulty: RecipeDifficulty;
+
+    @Column({
+        type: 'enum',
+        enum: Cuisine,
+        nullable: true,
+    })
+    cuisine: Cuisine;
 
     @Column('simple-array', { nullable: true })
     safetyNotes: string[];

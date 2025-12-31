@@ -98,6 +98,22 @@ export class RecipeController {
         return { success: true };
     }
 
+    @Get('cuisines')
+    @ApiOperation({
+        summary: 'Get available cuisines',
+        description: 'Get list of supported cuisines for recipe generation',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'List of cuisines',
+        schema: {
+            example: ['indonesian', 'japanese', 'italian'],
+        },
+    })
+    getCuisines(): string[] {
+        return Object.values(require('../entities').Cuisine);
+    }
+
     // IMPORTANT: /search MUST come BEFORE /:id to avoid route conflict
     @Get('search')
     @ApiOperation({

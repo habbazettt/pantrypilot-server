@@ -68,7 +68,7 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ### Backend Tasks
 
-- [ ] Create `Cuisine` enum/constant with popular cuisines:
+- [x] Create `Cuisine` enum/constant with popular cuisines:
 
   ```typescript
   enum Cuisine {
@@ -86,10 +86,10 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
   }
   ```
 
-- [ ] Update `GenerateRecipeDto` to include `cuisine?: string`
-- [ ] Modify Gemini prompt to incorporate cuisine preference
-- [ ] Add `cuisine` field to `Recipe` entity
-- [ ] Create `GET /cuisines` endpoint to list available cuisines
+- [x] Update `GenerateRecipeDto` to include `cuisine?: string`
+- [x] Modify Gemini prompt to incorporate cuisine preference
+- [x] Add `cuisine` field to `Recipe` entity
+- [x] Create `GET /cuisines` endpoint to list available cuisines
 
 ### Frontend Tasks
 
@@ -133,47 +133,7 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 - [ ] Daily value percentage indicators
 - [ ] Filter by calorie range
 
----
-
-## 📱 Phase 7: PWA Support
-
-**Priority:** Medium | **Effort:** Low
-
-### Backend Tasks
-
-- [ ] Implement proper cache headers
-- [ ] Add `manifest.json` endpoint (or static serve)
-- [ ] Service worker caching strategy recommendations
-
-### Frontend Tasks
-
-- [ ] Create `manifest.json` with app icons
-- [ ] Implement Service Worker (Workbox)
-- [ ] Offline-first for saved recipes
-- [ ] Install prompt / Add to Home Screen
-- [ ] Push notification setup (optional)
-
----
-
-## 🗣️ Phase 8: Voice Input
-
-**Priority:** Low | **Effort:** Low
-
-### Backend Tasks
-
-- [ ] No backend changes required (client-side feature)
-
-### Frontend Tasks
-
-- [ ] Integrate Web Speech API
-- [ ] Voice button di TagInput component
-- [ ] Visual feedback saat recording
-- [ ] Auto-add recognized ingredients
-- [ ] Language support: EN, ID
-
----
-
-## 📤 Phase 9: Social Sharing
+## 📤 Phase 7: Social Sharing
 
 **Priority:** Low | **Effort:** Medium
 
@@ -193,7 +153,7 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ---
 
-## 🎨 Phase 10: UI/UX Polish (Ongoing)
+## 🎨 Phase 8: UI/UX Polish (Ongoing)
 
 **Priority:** Ongoing | **Effort:** Variable
 
@@ -206,17 +166,3 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 - [ ] Performance optimization (lazy loading, code splitting)
 - [ ] Mobile gesture support (swipe to save, pull to refresh)
 - [ ] Onboarding tutorial untuk first-time users
-
----
-
-## 📈 Tech Debt & Infrastructure
-
-### Backend
-
-- [ ] Add comprehensive unit tests
-- [ ] Add integration tests dengan TestContainers
-- [ ] Implement rate limiting
-- [ ] Add request validation middleware
-- [ ] Database migrations setup (TypeORM migrations)
-- [ ] Logging enhancement (structured logs)
-- [ ] Health check endpoints enrichment

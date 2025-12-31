@@ -53,7 +53,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"ingredients\": [\"ayam\", \"bawang putih\", \"kecap manis\", \"jahe\"],\n  \"maxTime\": 30,\n  \"difficulty\": \"easy\",\n  \"allergies\": [],\n  \"preferences\": [\"halal\"]\n}"
+                            "raw": "{\n  \"ingredients\": [\"ayam\", \"bawang putih\", \"kecap manis\", \"jahe\"],\n  \"maxTime\": 30,\n  \"difficulty\": \"easy\",\n  \"cuisine\": \"indonesian\",\n  \"allergies\": [],\n  \"preferences\": [\"halal\"]\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/recipes/generate",
@@ -337,6 +337,31 @@
                             ]
                         },
                         "description": "Get Prometheus metrics for monitoring"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Cuisines",
+            "description": "Cuisine preference endpoints",
+            "item": [
+                {
+                    "name": "Get Available Cuisines",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/recipes/cuisines",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "recipes",
+                                "cuisines"
+                            ]
+                        },
+                        "description": "Get list of supported cuisines"
                     },
                     "response": []
                 }

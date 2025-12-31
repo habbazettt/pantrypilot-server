@@ -1,6 +1,6 @@
 import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { RecipeDifficulty } from '../entities';
+import { RecipeDifficulty, Cuisine } from '../entities';
 
 export class GenerateRecipeDto {
     @ApiProperty({
@@ -45,4 +45,13 @@ export class GenerateRecipeDto {
     @IsArray()
     @IsString({ each: true })
     preferences?: string[];
+
+    @ApiPropertyOptional({
+        description: 'Preferred cuisine style',
+        enum: Cuisine,
+        example: Cuisine.INDONESIAN,
+    })
+    @IsOptional()
+    @IsEnum(Cuisine)
+    cuisine?: Cuisine;
 }

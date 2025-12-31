@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { RecipeDifficulty } from '../entities';
+import { RecipeDifficulty, Cuisine } from '../entities';
 
 export class RecipeResponseDto {
     @ApiProperty({ example: 'uuid-here' })
@@ -36,6 +36,13 @@ export class RecipeResponseDto {
 
     @ApiPropertyOptional({ example: ['indonesian', 'chicken', 'quick'] })
     tags?: string[];
+
+    @ApiPropertyOptional({
+        description: 'Cuisine style',
+        enum: Cuisine,
+        example: Cuisine.INDONESIAN,
+    })
+    cuisine?: Cuisine;
 
     @ApiPropertyOptional({ example: 4.5 })
     rating?: number;
