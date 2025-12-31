@@ -138,7 +138,7 @@ RESPONSE FORMAT (JSON array only):
     "steps": ["Detailed cooking steps with specific times and techniques"],
     "estimatedTime": number (in minutes),
     "difficulty": "easy" or "medium" or "hard",
-    "safetyNotes": ["Safety and health tips if any"],
+    "safetyNotes": ["Safety and health tips. Do NOT split single sentences into multiple items. Keep full sentences together."],
     "tags": ["Category, suitable for, etc."]
   }
 ]

@@ -93,47 +93,14 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ### Frontend Tasks
 
-- [ ] Cuisine selector dropdown/chips di Recipe Configuration
-- [ ] Display cuisine badge on RecipeCard
-- [ ] Filter by cuisine in My Cookbook
-- [ ] Popular cuisines quick-select buttons
+- [x] Cuisine selector dropdown/chips di Recipe Configuration
+- [x] Display cuisine badge on RecipeCard
+- [x] Filter by cuisine in My Cookbook
+- [x] Popular cuisines quick-select buttons
 
 ---
 
-## 📊 Phase 6: Nutrition Estimator (AI)
-
-**Priority:** Medium | **Effort:** High
-
-### Backend Tasks
-
-- [ ] Create `NutritionService` module
-- [ ] Integrate dengan nutrition API (USDA / Nutritionix) atau Gemini estimation
-- [ ] Create `GET /recipes/:id/nutrition` endpoint
-- [ ] Response structure:
-
-  ```typescript
-  interface NutritionInfo {
-    calories: number;
-    protein: number;    // grams
-    carbs: number;      // grams
-    fat: number;        // grams
-    fiber?: number;
-    sodium?: number;
-    servingSize: string;
-    confidence: 'high' | 'medium' | 'low';
-  }
-  ```
-
-- [ ] Cache nutrition data di Recipe entity
-
-### Frontend Tasks
-
-- [ ] Nutrition card di Recipe Detail
-- [ ] Visual breakdown (pie chart / progress bars)
-- [ ] Daily value percentage indicators
-- [ ] Filter by calorie range
-
-## 📤 Phase 7: Social Sharing
+## 📤 Phase 4: Social Sharing
 
 **Priority:** Low | **Effort:** Medium
 
@@ -141,7 +108,7 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 - [ ] Create `GET /recipes/:id/share` - generate shareable link
 - [ ] Create `GET /recipes/shared/:shareId` - public recipe view
-- [ ] Optional: Generate OG image dynamically (Canvas/Sharp)
+- [ ] Generate OG image dynamically (Canvas/Sharp)
 - [ ] Rate limiting untuk share generation
 
 ### Frontend Tasks
@@ -153,7 +120,7 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ---
 
-## 🎨 Phase 8: UI/UX Polish (Ongoing)
+## 🎨 Phase 5: UI/UX Polish
 
 **Priority:** Ongoing | **Effort:** Variable
 

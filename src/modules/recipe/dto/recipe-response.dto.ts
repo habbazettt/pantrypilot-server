@@ -5,22 +5,22 @@ export class RecipeResponseDto {
     @ApiProperty({ example: 'uuid-here' })
     id: string;
 
-    @ApiProperty({ example: 'Ayam Kecap Manis' })
+    @ApiProperty({ example: 'Sweet Soy Chicken' })
     title: string;
 
-    @ApiPropertyOptional({ example: 'Resep ayam kecap manis yang lezat dan mudah dibuat' })
+    @ApiPropertyOptional({ example: 'Delicious and easy sweet soy chicken recipe' })
     description?: string;
 
-    @ApiProperty({ example: ['500g ayam', '3 siung bawang putih', '2 sdm kecap manis'] })
+    @ApiProperty({ example: ['500g chicken', '3 cloves garlic', '2 tbsp sweet soy sauce'] })
     ingredients: string[];
 
     @ApiProperty({
         example: [
-            'Potong ayam menjadi bagian-bagian kecil',
-            'Haluskan bawang putih dan jahe',
-            'Tumis bumbu hingga harum',
-            'Masukkan ayam, aduk hingga berubah warna',
-            'Tambahkan kecap manis, masak hingga matang',
+            'Cut chicken into small pieces',
+            'Crush garlic and ginger',
+            'Sauté spices until fragrant',
+            'Add chicken, stir until color changes',
+            'Add sweet soy sauce, cook until done',
         ],
     })
     steps: string[];
@@ -31,7 +31,7 @@ export class RecipeResponseDto {
     @ApiProperty({ enum: RecipeDifficulty, example: RecipeDifficulty.EASY })
     difficulty: RecipeDifficulty;
 
-    @ApiPropertyOptional({ example: ['Pastikan ayam sudah matang sempurna'] })
+    @ApiPropertyOptional({ example: ['Ensure chicken is cooked thoroughly'] })
     safetyNotes?: string[];
 
     @ApiPropertyOptional({ example: ['indonesian', 'chicken', 'quick'] })

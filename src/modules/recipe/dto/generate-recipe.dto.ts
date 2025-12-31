@@ -5,7 +5,7 @@ import { RecipeDifficulty, Cuisine } from '../entities';
 export class GenerateRecipeDto {
     @ApiProperty({
         description: 'List of ingredients available',
-        example: ['ayam', 'bawang putih', 'kecap manis', 'jahe'],
+        example: ['chicken', 'garlic', 'sweet soy sauce', 'ginger'],
     })
     @IsArray()
     @IsString({ each: true })
@@ -30,7 +30,7 @@ export class GenerateRecipeDto {
 
     @ApiPropertyOptional({
         description: 'Dietary restrictions or allergies to avoid',
-        example: ['kacang', 'seafood'],
+        example: ['peanuts', 'seafood'],
     })
     @IsOptional()
     @IsArray()
