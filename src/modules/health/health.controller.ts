@@ -8,8 +8,10 @@ import {
 } from '@nestjs/terminus';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @ApiTags('health')
+@SkipThrottle()
 @Controller('health')
 export class HealthController {
     constructor(

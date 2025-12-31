@@ -39,4 +39,21 @@ export class UserService {
     async validatePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
         return bcrypt.compare(plainPassword, hashedPassword);
     }
+
+    async updateProfile(userId: string, data: { name?: string; newPassword?: string }): Promise<User> {
+        const user = await this.userRepository.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        if (data.name !== undefined) {
+            user.name = data.name;
+        }
+
+        if (data.newPassword) {
+            user.password = await bcrypt.hash(data.newPassword, this.SALT_ROUNDS);
+        }
+
+        return this.userRepository.save(user);
+    }
 }

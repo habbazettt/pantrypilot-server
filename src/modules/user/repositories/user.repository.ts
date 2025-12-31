@@ -27,4 +27,8 @@ export class UserRepository {
         const count = await this.repository.count({ where: { email } });
         return count > 0;
     }
+
+    async save(user: User): Promise<User> {
+        return this.repository.save(user);
+    }
 }

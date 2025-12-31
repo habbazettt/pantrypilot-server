@@ -73,10 +73,10 @@ import { SessionMiddleware } from './common/middleware';
       }),
     }),
 
-    // Rate limiting (10 requests per 60 seconds globally)
+    // Rate limiting (100 requests per 60 seconds globally)
     ThrottlerModule.forRoot([{
       ttl: 60000,
-      limit: 10,
+      limit: 100,
     }]),
 
     // Feature modules

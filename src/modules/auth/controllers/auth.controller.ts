@@ -1,7 +1,7 @@
-import { Controller, Post, Body, UseGuards, Get, Request } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Request, Patch } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from '../services';
-import { RegisterDto, LoginDto } from '../dto';
+import { RegisterDto, LoginDto, UpdateProfileDto } from '../dto';
 import { LocalAuthGuard, JwtAuthGuard } from '../guards';
 
 @ApiTags('auth')
@@ -43,5 +43,19 @@ export class AuthController {
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     async getProfile(@Request() req) {
         return req.user;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('profile')
+    @ApiBearerAuth()
+    @ApiOperation({
+        summary: 'Update user profile',
+        description: 'Update display name and/or password',
+    })
+    @ApiResponse({ status: 200, description: 'Profile updated successfully' })
+    @ApiResponse({ status: 400, description: 'Invalid current password' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    async updateProfile(@Request() req, @Body() dto: UpdateProfileDto) {
+        return this.authService.updateProfile(req.user.id, dto);
     }
 }

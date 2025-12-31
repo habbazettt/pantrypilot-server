@@ -113,23 +113,24 @@ Roadmap pengembangan fitur untuk PantryPilot, dimulai dari Backend (NestJS) lalu
 
 ### Frontend Tasks
 
-- [ ] Share button di RecipeCard
-- [ ] Share modal dengan options (Copy Link, WhatsApp, Twitter)
-- [ ] Generate recipe card image for sharing
-- [ ] Public recipe view page (no auth required)
+- [x] Share button di RecipeCard
+- [x] Share modal dengan options (Copy Link, WhatsApp, Twitter)
+- [x] Generate recipe card image for sharing
+- [x] Public recipe view page (no auth required)
 
 ---
 
 ## 🎨 Phase 5: UI/UX Polish
 
-**Priority:** Ongoing | **Effort:** Variable
+**Priority:** Low | **Effort:** Variable
 
 ### Tasks
 
-- [ ] 3d background effect (e.g. Vanta.js etc)
-- [ ] Smooth light/dark mode transitions
-- [ ] Loading skeletons untuk semua async content
-- [ ] Error boundaries & fallback UI
-- [ ] Accessibility audit (a11y)
-- [ ] Performance optimization (lazy loading, code splitting)
-- [ ] Onboarding tutorial untuk first-time users (How To Use dialog / page)
+- [x] 3d background effect (e.g. Vanta.js etc) - Implemented Aurora Background
+- [x] Smooth light/dark mode transitions
+- [x] Loading skeletons untuk semua async content
+- [x] Error boundaries & fallback UI
+- [x] Accessibility audit (a11y)
+- [x] Performance optimization (lazy loading, code splitting)
+- [x] Onboarding tutorial untuk first-time users (How To Use dialog / page)
+- [x] My Account Page (Profile Page)

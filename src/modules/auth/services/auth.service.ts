@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../../user';
-import { RegisterDto } from '../dto';
+import { RegisterDto, UpdateProfileDto } from '../dto';
 
 @Injectable()
 export class AuthService {
@@ -41,5 +41,38 @@ export class AuthService {
         // Auto-login after registration
         const { password: _, ...userWithoutPassword } = user;
         return this.login(userWithoutPassword);
+    }
+
+    async updateProfile(userId: string, dto: UpdateProfileDto) {
+        // If changing password, verify current password first
+        if (dto.newPassword) {
+            if (!dto.currentPassword) {
+                throw new BadRequestException('Current password is required to change password');
+            }
+
+            const user = await this.userService.findById(userId);
+            if (!user) {
+                throw new BadRequestException('User not found');
+            }
+
+            const isValid = await this.userService.validatePassword(dto.currentPassword, user.password);
+            if (!isValid) {
+                throw new BadRequestException('Current password is incorrect');
+            }
+        }
+
+        const updatedUser = await this.userService.updateProfile(userId, {
+            name: dto.name,
+            newPassword: dto.newPassword,
+        });
+
+        this.logger.log(`User profile updated: ${updatedUser.email}`);
+
+        return {
+            id: updatedUser.id,
+            email: updatedUser.email,
+            name: updatedUser.name,
+            createdAt: updatedUser.createdAt,
+        };
     }
 }
